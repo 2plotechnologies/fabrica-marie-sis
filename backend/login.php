@@ -14,9 +14,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($password, $user["password"])) {
         $_SESSION["documento"] = $dni;
         $_SESSION["usuario"] = $user["Nombre"];
-        echo "Inicio de sesión exitoso. Bienvenido, " . htmlspecialchars($_SESSION["usuario"]) . "!";
+
+         // Redirigir a home.php
+         header("Location: ../home.php");
+         exit;
     } else {
-        echo "Usuario o contraseña incorrectos.";
+         // Mostrar alerta y redirigir a index.php
+        echo "<script>
+                alert('Usuario o contraseña incorrectos.');
+                window.location.href = '../index.html';
+              </script>";
+        exit;
     }
 }
 ?>
