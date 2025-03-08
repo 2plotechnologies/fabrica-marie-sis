@@ -14,6 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($password, $user["password"])) {
         $_SESSION["documento"] = $dni;
         $_SESSION["usuario"] = $user["Nombre"];
+        $_SESSION["rol"] = $user["Id_Rol"];
+        $_SESSION["avatar"] = $user["Avatar"];
 
          // Redirigir a home.php
          header("Location: ../home.php");

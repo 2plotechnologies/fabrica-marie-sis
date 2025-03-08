@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Administrators</title>
+	<title>Usuarios</title>
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/sweetalert2.css">
 	<link rel="stylesheet" href="css/material.min.css">
@@ -34,7 +34,7 @@
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde aut nulla accusantium minus corporis accusamus fuga harum natus molestias necessitatibus.
+				Gestión de usuarios del sistema
 				</p>
 			</div>
 		</section>
@@ -48,75 +48,87 @@
 					<div class="mdl-cell mdl-cell--12-col">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-primary text-center tittles">
-								New Administrator
+								Crear usuario
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action = "backend/guardar_usuario.php" method = "POST">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; DATA ADMINISTRATOR</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos del usuario</legend><br>
 									    </div>
 									    <div class="mdl-cell mdl-cell--12-col">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIAdmin">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIAdmin" name="dni">
 												<label class="mdl-textfield__label" for="DNIAdmin">DNI</label>
 												<span class="mdl-textfield__error">Invalid number</span>
 											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameAdmin">
-												<label class="mdl-textfield__label" for="NameAdmin">Name</label>
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameAdmin" name="nombre">
+												<label class="mdl-textfield__label" for="NameAdmin">Nombre</label>
 												<span class="mdl-textfield__error">Invalid name</span>
 											</div>
 									    </div>
-										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="LastNameAdmin">
-												<label class="mdl-textfield__label" for="LastNameAdmin">Last Name</label>
-												<span class="mdl-textfield__error">Invalid last name</span>
-											</div>
-										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneAdmin">
-												<label class="mdl-textfield__label" for="phoneAdmin">Phone</label>
+												<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneAdmin" name="telefono">
+												<label class="mdl-textfield__label" for="phoneAdmin">Telefono</label>
 												<span class="mdl-textfield__error">Invalid phone number</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="email" id="emailAdmin">
-												<label class="mdl-textfield__label" for="emailAdmin">E-mail</label>
+												<input class="mdl-textfield__input" type="email" id="emailAdmin" name="correo">
+												<label class="mdl-textfield__label" for="emailAdmin">Correo</label>
 												<span class="mdl-textfield__error">Invalid E-mail</span>
 											</div>
 										</div>
-										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
-											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" id="addressAdmin">
-												<label class="mdl-textfield__label" for="addressAdmin">Address</label>
-												<span class="mdl-textfield__error">Invalid address</span>
-											</div>
-										</div>
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; ACCOUNT DETAILS</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Detalles del usuario</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ]*(\.[0-9]+)?" id="UserNameAdmin">
-												<label class="mdl-textfield__label" for="UserNameAdmin">User Name</label>
-												<span class="mdl-textfield__error">Invalid user name</span>
+												<select id="rol" name="id_rol" class="mdl-textfield__input">
+													<option value="">-- Seleccionar --</option>
+													<?php
+														require 'backend/conexion.php';
+
+														// Buscar todos los roles en la base de datos
+														$stmt = $pdo->prepare("SELECT * FROM roles"); // Asegúrate de que la tabla tenga estos campos
+														$stmt->execute();
+														
+														// Recorrer los resultados y agregarlos al select
+														while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['Descripcion']) . "</option>";
+														}
+													?>
+												</select>
+												<label class="mdl-textfield__label">Selecciona un rol:</label>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="password" id="passwordAdmin">
+												<input class="mdl-textfield__input" type="password" id="passwordAdmin" name = "password">
 												<label class="mdl-textfield__label" for="passwordAdmin">Password</label>
 												<span class="mdl-textfield__error">Invalid password</span>
 											</div>
 										</div>
+										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<select class="mdl-textfield__input" id="estadoAdmin" name="estado">
+													<option value="1">
+														Activo
+													</option>
+													<option value="0">
+														Inactivo
+													</option>
+												</select>
+												<label class="mdl-textfield__label">Estado</label>
+											</div>
+										</div>
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; CHOOSE AVATAR</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Escoger foto</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet">
 											<div class="mdl-grid">
@@ -168,7 +180,7 @@
 					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-cell--2-offset-desktop">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-success text-center tittles">
-								List Administrator
+								Lista de usuarios
 							</div>
 							<div class="full-width panel-content">
 								<form action="#">
@@ -183,50 +195,27 @@
 									</div>
 								</form>
 								<div class="mdl-list">
+								<?php
+									require 'backend/conexion.php';
+
+									// Buscar todos los usuarios en la base de datos
+									$stmt = $pdo->prepare("SELECT * FROM usuarios"); // Asegúrate de que la tabla tenga estos campos
+									$stmt->execute();
+														
+									// Recorrer los resultados y agregarlos a la lista
+									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									
+								?>
 									<div class="mdl-list__item mdl-list__item--two-line">
 										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>1. Administrator name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
+											<img src = "assets/img/<?php echo $row['Avatar'] ?>" style = "width: 50px;">
+											<span><?php echo $row['Nombre'] ?></span>
+											<span class="mdl-list__item-sub-title"><?php echo $row['DNI'] ?></span>
 										</span>
 										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
 									</div>
 									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>2. Administrator name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>3. Administrator name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>4. Administrator name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>5. Administrator name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
+									<?php } ?>
 								</div>
 							</div>
 						</div>
