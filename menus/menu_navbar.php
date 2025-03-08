@@ -15,7 +15,7 @@
 						<li class="text-condensedLight noLink" ><small><?php echo $_SESSION["usuario"]; ?></small></li>
 						<li class="noLink">
 							<figure>
-								<img src="assets/img/avatar-male.png" alt="Avatar" class="img-responsive">
+								<img src="assets/img/<?php echo $_SESSION["avatar"]; ?>" alt="Avatar" class="img-responsive">
 							</figure>
 						</li>
 					</ul>

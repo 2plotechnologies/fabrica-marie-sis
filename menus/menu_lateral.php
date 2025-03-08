@@ -6,7 +6,7 @@
 			</div>
 			<figure class="full-width navLateral-body-tittle-menu">
 				<div>
-					<img src="assets/img/avatar-male.png" alt="Avatar" class="img-responsive">
+					<img src="assets/img/<?php echo $_SESSION["avatar"]; ?>" alt="Avatar" class="img-responsive">
 				</div>
 				<figcaption>
 					<span>
