@@ -75,8 +75,8 @@
 										<i class="zmdi zmdi-label"></i>
 									</div>
 									<div class="navLateral-body-cr">
-										CATEGORIES
-									</div>
+										Presentaciones
+									</div> 
 								</a>
 							</li>
 						</ul>

@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Categories</title>
+	<title>Presentaciones</title>
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/sweetalert2.css">
 	<link rel="stylesheet" href="css/material.min.css">
@@ -34,39 +34,40 @@
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde aut nulla accusantium minus corporis accusamus fuga harum natus molestias necessitatibus.
+					Aqui puedes administrar las diferentes presentaciones de cada producto
 				</p>
 			</div>
 		</section>
 		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
 			<div class="mdl-tabs__tab-bar">
-				<a href="#tabNewCategory" class="mdl-tabs__tab is-active">NEW</a>
-				<a href="#tabListCategory" class="mdl-tabs__tab">LIST</a>
+				<a href="#tabNewCategory" class="mdl-tabs__tab is-active">Nueva</a>
+				<a href="#tabListCategory" class="mdl-tabs__tab">Listar</a>
 			</div>
 			<div class="mdl-tabs__panel is-active" id="tabNewCategory">
 				<div class="mdl-grid">
 					<div class="mdl-cell mdl-cell--12-col">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-primary text-center tittles">
-								New category
+								Nueva presentación
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action = "backend/presentaciones.php" method = "POST">
+									<input type = "hidden" name = "accion" value = "crear">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; DATA CATEGORY</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos de la presentación</legend><br>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameCategory">
-												<label class="mdl-textfield__label" for="NameCategory">Name</label>
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameCategory" name = "nombre">
+												<label class="mdl-textfield__label" for="NameCategory">Nombre</label>
 												<span class="mdl-textfield__error">Invalid name</span>
 											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="descriptionCategory">
-												<label class="mdl-textfield__label" for="descriptionCategory">Description</label>
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="descriptionCategory" name = "descripcion" >
+												<label class="mdl-textfield__label" for="descriptionCategory">Descripción</label>
 												<span class="mdl-textfield__error">Invalid description</span>
 											</div>
 									    </div>
@@ -88,7 +89,7 @@
 					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-cell--2-offset-desktop">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-success text-center tittles">
-								List categories
+								Listar presentaciones
 							</div>
 							<div class="full-width panel-content">
 								<form action="#">
@@ -103,32 +104,27 @@
 									</div>
 								</form>
 								<div class="mdl-list">
+								<?php
+									require 'backend/conexion.php';
+
+									// Buscar todos los usuarios en la base de datos
+									$stmt = $pdo->prepare("SELECT * FROM presentaciones"); // Asegúrate de que la tabla tenga estos campos
+									$stmt->execute();
+														
+									// Recorrer los resultados y agregarlos a la lista
+									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									
+								?>
 									<div class="mdl-list__item mdl-list__item--two-line">
 										<span class="mdl-list__item-primary-content">
 											<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
-											<span>1. Category Name</span>
-											<span class="mdl-list__item-sub-title">Sub tittle</span>
+											<span><?php echo $row['Presentacion'] ?></span>
+											<span class="mdl-list__item-sub-title"><?php echo $row['Descripcion'] ?></span>
 										</span>
 										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
 									</div>
 									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
-											<span>2. Category Name</span>
-											<span class="mdl-list__item-sub-title">Sub tittle</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-label mdl-list__item-avatar"></i>
-											<span>3. Category Name</span>
-											<span class="mdl-list__item-sub-title">Sub tittle</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
+									<?php } ?>
 								</div>
 							</div>
 						</div>

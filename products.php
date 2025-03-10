@@ -40,115 +40,92 @@
 		</section>
 		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
 			<div class="mdl-tabs__tab-bar">
-				<a href="#tabNewProduct" class="mdl-tabs__tab is-active">NEW</a>
-				<a href="#tabListProducts" class="mdl-tabs__tab">LIST</a>
+				<a href="#tabNewProduct" class="mdl-tabs__tab is-active">Crear</a>
+				<a href="#tabListProducts" class="mdl-tabs__tab">Listar</a>
 			</div>
 			<div class="mdl-tabs__panel is-active" id="tabNewProduct">
 				<div class="mdl-grid">
 					<div class="mdl-cell mdl-cell--12-col">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-primary text-center tittles">
-								New Product
+								Nuevo producto
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action = "backend/productos.php" method = "POST" enctype= multipart/form-data>
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; BASIC INFORMATION</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Información basica</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9- ]*(\.[0-9]+)?" id="BarCode">
-												<label class="mdl-textfield__label" for="BarCode">Barcode</label>
-												<span class="mdl-textfield__error">Invalid barcode</span>
-											</div>
-										</div>
-										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameProduct">
-												<label class="mdl-textfield__label" for="NameProduct">Name</label>
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameProduct" name="nombre">
+												<label class="mdl-textfield__label" for="NameProduct">Nombre</label>
 												<span class="mdl-textfield__error">Invalid name</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="StrockProduct">
-												<label class="mdl-textfield__label" for="StrockProduct">Units</label>
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="StrockProduct" name="produccion">
+												<label class="mdl-textfield__label" for="StrockProduct">Producción actual</label>
 												<span class="mdl-textfield__error">Invalid number</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="PriceProduct">
-												<label class="mdl-textfield__label" for="PriceProduct">Price</label>
+												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="PriceProduct" name="precio_unitario">
+												<label class="mdl-textfield__label" for="PriceProduct">Precio Unitario</label>
 												<span class="mdl-textfield__error">Invalid price</span>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="discountProduct">
-												<label class="mdl-textfield__label" for="discountProduct">% Discount</label>
+												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="discountProduct" name="descuento">
+												<label class="mdl-textfield__label" for="discountProduct">Descuento</label>
 												<span class="mdl-textfield__error">Invalid discount</span>
 											</div>	
 										</div>
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; CATEGORY</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Presentación</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--12-col">
 											<div class="mdl-textfield mdl-js-textfield">
-												<select class="mdl-textfield__input">
-													<option value="" disabled="" selected="">Select category</option>
-													<option value="">Category 1</option>
-													<option value="">Category 2</option>
+											<select id="presentacion" name="id_presentacion" class="mdl-textfield__input">
+													<option value="">-- Seleccionar --</option>
+													<?php
+														require 'backend/conexion.php';
+
+														// Buscar todos los roles en la base de datos
+														$stmt = $pdo->prepare("SELECT * FROM presentaciones"); // Asegúrate de que la tabla tenga estos campos
+														$stmt->execute();
+														
+														// Recorrer los resultados y agregarlos al select
+														while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['Presentacion']) . "</option>";
+														}
+													?>
 												</select>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; SUPPLIER DATA AND MODEL</legend><br>
-									    </div>
-										<div class="mdl-cell mdl-cell--12-col">
-											<div class="mdl-textfield mdl-js-textfield">
-												<select class="mdl-textfield__input">
-													<option value="" disabled="" selected="">Select provider</option>
-													<option value="">Provider 1</option>
-													<option value="">Provider 2</option>
-												</select>
-											</div>
-									    </div>
-										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text"  id="modelProduct">
-												<label class="mdl-textfield__label" for="modelProduct">Model</label>
-												<span class="mdl-textfield__error">Invalid model</span>
-											</div>
-										</div>
-										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" id="markProduct">
-												<label class="mdl-textfield__label" for="markProduct">Mark</label>
-												<span class="mdl-textfield__error">Invalid Mark</span>
-											</div>
-										</div>
-										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; OTHER DATA</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos extra</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield">
-												<input type="date" class="mdl-textfield__input">
+												<input type="date" class="mdl-textfield__input" name="fecha_creacion">
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield">
-												<select class="mdl-textfield__input">
-													<option value="" disabled="" selected="">Select status</option>
-													<option value="">Active</option>
-													<option value="">deactivated</option>
+												<select class="mdl-textfield__input" name="estado">
+													<option value="" disabled="" selected="">Estado</option>
+													<option value="1">Activo</option>
+													<option value="0">Inactivo</option>
 												</select>
 											</div>
 										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield">
-												<input type="file">
+												<input type="file" name="imagen">
 											</div>
 										</div>
 									</div>
@@ -180,73 +157,49 @@
 						</form>
 						<nav class="full-width menu-categories">
 							<ul class="list-unstyle text-center">
-								<li><a href="#!">Category 1</a></li>
-								<li><a href="#!">Category 2</a></li>
-								<li><a href="#!">Category 3</a></li>
-								<li><a href="#!">Category 4</a></li>
+							<?php
+									require 'backend/conexion.php';
+
+									// Buscar todos los usuarios en la base de datos
+									$stmt1 = $pdo->prepare("SELECT * FROM presentaciones"); // Asegúrate de que la tabla tenga estos campos
+									$stmt1->execute();
+														
+									// Recorrer los resultados y agregarlos a la lista
+									while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+									
+								?>
+								<li><a href="#!"><?php echo $row1['Presentacion'] ?></a></li>
+								<?php } ?>
 							</ul>
 						</nav>
 						<div class="full-width text-center" style="padding: 30px 0;">
+						<?php
+									require 'backend/conexion.php';
+
+									// Buscar todos los usuarios en la base de datos
+									$stmt = $pdo->prepare("SELECT * FROM productos"); // Asegúrate de que la tabla tenga estos campos
+									$stmt->execute();
+														
+									// Recorrer los resultados y agregarlos a la lista
+									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									
+								?>
 							<div class="mdl-card mdl-shadow--2dp full-width product-card">
 								<div class="mdl-card__title">
-									<img src="assets/img/fontLogin.jpg" alt="product" class="img-responsive">
+									<img src="<?php echo $row['Imagen'] ?>" alt="product" class="img-responsive">
 								</div>
 								<div class="mdl-card__supporting-text">
-									<small>Stock</small><br>
-									<small>Category</small>
+									<small><?php echo $row['Produccion_Actual'] ?></small><br>
+									<small><?php echo $row['Precio_Unitario'] ?></small>
 								</div>
 								<div class="mdl-card__actions mdl-card--border">
-									Product name
+									<?php echo $row['Nombre'] ?>
 									<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
 										<i class="zmdi zmdi-more"></i>
 									</button>
 								</div>
 							</div>
-							<div class="mdl-card mdl-shadow--2dp full-width product-card">
-								<div class="mdl-card__title">
-									<img src="assets/img/fontLogin.jpg" alt="product" class="img-responsive">
-								</div>
-								<div class="mdl-card__supporting-text">
-									<small>Stock</small><br>
-									<small>Category</small>
-								</div>
-								<div class="mdl-card__actions mdl-card--border">
-									Product name
-									<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-										<i class="zmdi zmdi-more"></i>
-									</button>
-								</div>
-							</div>
-							<div class="mdl-card mdl-shadow--2dp full-width product-card">
-								<div class="mdl-card__title">
-									<img src="assets/img/fontLogin.jpg" alt="product" class="img-responsive">
-								</div>
-								<div class="mdl-card__supporting-text">
-									<small>Stock</small><br>
-									<small>Category</small>
-								</div>
-								<div class="mdl-card__actions mdl-card--border">
-									Product name
-									<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-										<i class="zmdi zmdi-more"></i>
-									</button>
-								</div>
-							</div>
-							<div class="mdl-card mdl-shadow--2dp full-width product-card">
-								<div class="mdl-card__title">
-									<img src="assets/img/fontLogin.jpg" alt="product" class="img-responsive">
-								</div>
-								<div class="mdl-card__supporting-text">
-									<small>Stock</small><br>
-									<small>Category</small>
-								</div>
-								<div class="mdl-card__actions mdl-card--border">
-									Product name
-									<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-										<i class="zmdi zmdi-more"></i>
-									</button>
-								</div>
-							</div>
+							<?php } ?>
 						</div>
 					</div>
 				</div>
