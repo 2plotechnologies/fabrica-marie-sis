@@ -34,77 +34,83 @@
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde aut nulla accusantium minus corporis accusamus fuga harum natus molestias necessitatibus.
+					Aqui puedes administrar los clientes
 				</p>
 			</div>
 		</section>
 		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
 			<div class="mdl-tabs__tab-bar">
-				<a href="#tabNewClient" class="mdl-tabs__tab is-active">NEW</a>
-				<a href="#tabListClient" class="mdl-tabs__tab">LIST</a>
+				<a href="#tabNewClient" class="mdl-tabs__tab is-active">Nuevo</a>
+				<a href="#tabListClient" class="mdl-tabs__tab">Listar</a>
 			</div>
 			<div class="mdl-tabs__panel is-active" id="tabNewClient">
 				<div class="mdl-grid">
 					<div class="mdl-cell mdl-cell--12-col">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-primary text-center tittles">
-								New client
+								Nuevo Cliente
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action = "backend/clientes.php" method = "POST">
+									<input type = "hidden" name = "accion" value = "crear">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; DATA CLIENT</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos cliente</legend><br>
+									    </div>
+										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+											<select class="mdl-textfield__input" name="tipo">
+													<option value="" disabled="" selected="">Tipo Documento</option>
+													<option value="ruc">RUC</option>
+													<option value="dni">DNI</option>
+												</select>
+												<span class="mdl-textfield__error">Invalid type</span>
+											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--12-col">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIClient">
-												<label class="mdl-textfield__label" for="DNIClient">DNI</label>
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNIClient" name="documento">
+												<label class="mdl-textfield__label" for="DNIClient">Nro. de documento</label>
 												<span class="mdl-textfield__error">Invalid number</span>
 											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameClient">
-												<label class="mdl-textfield__label" for="NameClient">Name</label>
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameClient" name = "nombre">
+												<label class="mdl-textfield__label" for="NameClient">Nombre Cliente</label>
 												<span class="mdl-textfield__error">Invalid name</span>
 											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="LastNameClient">
-												<label class="mdl-textfield__label" for="LastNameClient">Last Name</label>
-												<span class="mdl-textfield__error">Invalid last name</span>
-											</div>
-									    </div>
-									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" id="addressClient1">
-												<label class="mdl-textfield__label" for="addressClient1">Address 1</label>
+												<input class="mdl-textfield__input" type="text" id="addressClient1" name = "direccion">
+												<label class="mdl-textfield__label" for="addressClient1">Direccion</label>
 												<span class="mdl-textfield__error">Invalid address</span>
 											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" id="addressClient2">
-												<label class="mdl-textfield__label" for="addressClient2">Address 2</label>
-												<span class="mdl-textfield__error">Invalid address</span>
-											</div>
-									    </div>
-									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneClient">
-												<label class="mdl-textfield__label" for="phoneClient">Phone</label>
+												<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneClient" name = "telefono">
+												<label class="mdl-textfield__label" for="phoneClient">Telefono</label>
 												<span class="mdl-textfield__error">Invalid phone number</span>
 											</div>
 									    </div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="email" id="emailClient">
+												<input class="mdl-textfield__input" type="email" id="emailClient" name = "correo">
 												<label class="mdl-textfield__label" for="emailClient">E-mail</label>
 												<span class="mdl-textfield__error">Invalid E-mail</span>
 											</div>
 									    </div>
+										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield">
+												<select class="mdl-textfield__input" name="estado">
+													<option value="" disabled="" selected="">Estado</option>
+													<option value="1">Activo</option>
+													<option value="0">Inactivo</option>
+												</select>
+											</div>
+										</div>
 									</div>
 									<p class="text-center">
 										<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored bg-primary" id="btn-addClient">
@@ -123,7 +129,7 @@
 					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-cell--2-offset-desktop">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-success text-center tittles">
-								List Clients
+								Lista de clientes
 							</div>
 							<div class="full-width panel-content">
 								<form action="#">
@@ -138,68 +144,26 @@
 									</div>
 								</form>
 								<div class="mdl-list">
+								<?php
+									require 'backend/conexion.php';
+
+									// Buscar todos los usuarios en la base de datos
+									$stmt = $pdo->prepare("SELECT * FROM clientes"); // Asegúrate de que la tabla tenga estos campos
+									$stmt->execute();
+														
+									// Recorrer los resultados y agregarlos a la lista
+									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									?>
 									<div class="mdl-list__item mdl-list__item--two-line">
 										<span class="mdl-list__item-primary-content">
 											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>1. Client name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
+											<span><?php echo $row['NombreCliente'] ?></span>
+											<span class="mdl-list__item-sub-title"><?php echo $row['Numero_Documento'] ?></span>
 										</span>
 										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
 									</div>
 									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>2. Client name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>3. Client name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>4. Client name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>5. Client name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>6. Client name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-account mdl-list__item-avatar"></i>
-											<span>7. Client name</span>
-											<span class="mdl-list__item-sub-title">DNI</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
+									<?php } ?>
 								</div>
 							</div>
 						</div>
