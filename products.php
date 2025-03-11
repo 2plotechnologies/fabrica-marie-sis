@@ -157,54 +157,48 @@
 						</form>
 						<nav class="full-width menu-categories">
 							<ul class="list-unstyle text-center">
-							<?php
+								<li><a href="#" class="filter-presentacion" data-id="0">Todos</a></li>
+								<?php
 									require 'backend/conexion.php';
-
-									// Buscar todos los usuarios en la base de datos
-									$stmt1 = $pdo->prepare("SELECT * FROM presentaciones"); // Asegúrate de que la tabla tenga estos campos
+									$stmt1 = $pdo->prepare("SELECT * FROM presentaciones");
 									$stmt1->execute();
-														
-									// Recorrer los resultados y agregarlos a la lista
 									while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-									
 								?>
-								<li><a href="#!"><?php echo $row1['Presentacion'] ?></a></li>
+								<li><a href="#" class="filter-presentacion" data-id="<?php echo $row1['Id']; ?>">
+									<?php echo htmlspecialchars($row1['Presentacion']); ?>
+								</a></li>
 								<?php } ?>
 							</ul>
 						</nav>
-						<div class="full-width text-center" style="padding: 30px 0;">
-						<?php
-									require 'backend/conexion.php';
 
-									// Buscar todos los usuarios en la base de datos
-									$stmt = $pdo->prepare("SELECT * FROM productos"); // Asegúrate de que la tabla tenga estos campos
-									$stmt->execute();
-														
-									// Recorrer los resultados y agregarlos a la lista
-									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-									
-								?>
-							<div class="mdl-card mdl-shadow--2dp full-width product-card">
-								<div class="mdl-card__title">
-									<img src="<?php echo $row['Imagen'] ?>" alt="product" class="img-responsive">
-								</div>
-								<div class="mdl-card__supporting-text">
-									<small><?php echo $row['Produccion_Actual'] ?></small><br>
-									<small><?php echo $row['Precio_Unitario'] ?></small>
-								</div>
-								<div class="mdl-card__actions mdl-card--border">
-									<?php echo $row['Nombre'] ?>
-									<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-										<i class="zmdi zmdi-more"></i>
-									</button>
-								</div>
-							</div>
-							<?php } ?>
+						<div class="full-width text-center" style="padding: 30px 0;" id="productos-lista">
+							<!-- Aquí se cargarán los productos filtrados -->
 						</div>
+
 					</div>
 				</div>
 			</div>
 		</div>
+		<script>
+			$(document).ready(function(){
+				$(".filter-presentacion").click(function(e){
+					e.preventDefault(); // Evita la navegación predeterminada
+					var idPresentacion = $(this).data("id");
+
+					$.ajax({
+						url: "backend/filtrar_productos.php",
+						method: "POST",
+						data: { id_presentacion: idPresentacion },
+						success: function(response) {
+							$("#productos-lista").html(response);
+						},
+						error: function() {
+							alert("Error al cargar los productos.");
+						}
+					});
+				});
+			});
+		</script>
 	</section>
 </body>
 </html>
