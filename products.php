@@ -52,6 +52,7 @@
 							</div>
 							<div class="full-width panel-content">
 								<form action = "backend/productos.php" method = "POST" enctype= multipart/form-data>
+								<input type = "hidden" name = "accion" value = "crear">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
 									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Información basica</legend><br>

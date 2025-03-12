@@ -2,14 +2,24 @@
 require 'conexion.php'; // Importar la conexión
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $dni = $_POST["dni"];
-    $nombre = $_POST["nombre"];
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT); // Cifrar la contraseña
-    $correo = $_POST["correo"];
-    $telefono = $_POST["telefono"];
-    $id_rol = $_POST["id_rol"];
-    $estado = $_POST["estado"];
-    $avatar = $_POST["options"];
+    
+    // Filtrar y sanitizar los datos
+    $dni = filter_input(INPUT_POST, "dni", FILTER_SANITIZE_STRING);
+    $nombre = filter_input(INPUT_POST, "nombre", FILTER_SANITIZE_STRING);
+    $password = $_POST["password"]; // No sanitizamos aquí porque será encriptada
+    $correo = filter_input(INPUT_POST, "correo", FILTER_VALIDATE_EMAIL);
+    $telefono = filter_input(INPUT_POST, "telefono", FILTER_SANITIZE_NUMBER_INT);
+    $id_rol = filter_input(INPUT_POST, "id_rol", FILTER_VALIDATE_INT);
+    $estado = filter_input(INPUT_POST, "estado", FILTER_VALIDATE_INT);
+    $avatar = filter_input(INPUT_POST, "options", FILTER_SANITIZE_STRING);
+
+    // Verificar si los datos requeridos están presentes
+    if (!$dni || !$nombre || !$password || !$correo || !$telefono || !$id_rol || $estado === false) {
+        die("<script>alert('Error: Datos inválidos o incompletos'); window.history.back();</script>");
+    }
+
+    // Encriptar la contraseña
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Verificar si el usuario ya existe
     $stmt = $pdo->prepare("SELECT Id FROM usuarios WHERE dni = ?");
@@ -24,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Insertar usuario en la base de datos
     $stmt = $pdo->prepare("INSERT INTO usuarios (DNI, Nombre, password, Email, Telefono, Id_Rol, Estado, Avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    if ($stmt->execute([$dni, $nombre, $password, $correo, $telefono, $id_rol, $estado, $avatar])) {
+    if ($stmt->execute([$dni, $nombre, $hashed_password, $correo, $telefono, $id_rol, $estado, $avatar])) {
         echo "<script>
                 alert('Usuario creado con exitosamente.');
                 window.location.href = '../admin.php';

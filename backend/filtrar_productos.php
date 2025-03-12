@@ -5,7 +5,12 @@ require 'conexion.php';
 $id_presentacion = isset($_POST["id_presentacion"]) ? intval($_POST["id_presentacion"]) : 0;
 
 if ($id_presentacion > 0) {
-    $stmt = $pdo->prepare("SELECT * FROM productos WHERE Id_Presentacion = ?");
+    $stmt = $pdo->prepare("
+        SELECT p.* 
+        FROM productos p
+        INNER JOIN Producto_Presentacion pp ON p.Id = pp.Id_Producto
+        WHERE pp.Id_Presentacion = ?
+    ");
     $stmt->execute([$id_presentacion]);
 } else {
     $stmt = $pdo->prepare("SELECT * FROM productos");
