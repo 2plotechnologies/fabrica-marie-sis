@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $pdo->prepare("INSERT INTO usuarios (DNI, Nombre, password, Email, Telefono, Id_Rol, Estado, Avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt->execute([$dni, $nombre, $hashed_password, $correo, $telefono, $id_rol, $estado, $avatar])) {
         echo "<script>
-                alert('Usuario creado con exitosamente.');
+                alert('Usuario creado exitosamente.');
                 window.location.href = '../admin.php';
             </script>";
         exit;

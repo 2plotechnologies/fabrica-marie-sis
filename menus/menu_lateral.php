@@ -55,7 +55,7 @@
 										<i class="zmdi zmdi-truck"></i>
 									</div>
 									<div class="navLateral-body-cr">
-										PROVIDERS
+										Proveedores
 									</div>
 								</a>
 							</li>

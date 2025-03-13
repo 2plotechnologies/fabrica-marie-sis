@@ -1,10 +1,10 @@
 <?php 
     require 'conexion.php'; // Importar la conexión
     $accion = $_POST['accion'];
-    $nombre = $_POST['nombre'];
-    $descripcion = $_POST['descripcion'];
 
     if($accion == 'crear'){
+        $nombre = $_POST['nombre'];
+        $descripcion = $_POST['descripcion'];
         // Insertar usuario en la base de datos
         $stmt = $pdo->prepare("INSERT INTO presentaciones (Presentacion, Descripcion) VALUES (?, ?)");
         if ($stmt->execute([$nombre, $descripcion])) {

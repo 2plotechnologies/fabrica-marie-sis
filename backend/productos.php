@@ -50,11 +50,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $producto_id = $pdo->lastInsertId();
         
             // Insertar en la tabla Producto_Presentacion
-            $sql_presentacion = "INSERT INTO Producto_Presentacion (Id_Producto, Id_Presentacion) VALUES (:producto_id, :presentacion_id)";
+            $sql_presentacion = "INSERT INTO Producto_Presentacion (Id_Producto, Id_Presentacion, Precio_Unitario, Descuento) VALUES (:producto_id, :presentacion_id, :precio, :descuento)";
             $stmt_presentacion = $pdo->prepare($sql_presentacion);
             $stmt_presentacion->execute([
                 ":producto_id" => $producto_id,
-                ":presentacion_id" => $id_presentacion  // Debes asegurarte de que este valor viene del formulario
+                ":presentacion_id" => $id_presentacion,
+                ":precio" => $precio,
+                ":descuento" => $descuento  // Debes asegurarte de que este valor viene del formulario
             ]);
         
             echo "<script>alert('Producto registrado con éxito'); window.location.href = '../products.php';</script>";
