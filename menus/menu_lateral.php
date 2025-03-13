@@ -65,7 +65,7 @@
 										<i class="zmdi zmdi-card"></i>
 									</div>
 									<div class="navLateral-body-cr">
-										PAYMENTS
+										Gastos
 									</div>
 								</a>
 							</li>

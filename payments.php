@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Payments</title>
+	<title>Gastos</title>
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/sweetalert2.css">
 	<link rel="stylesheet" href="css/material.min.css">
@@ -18,6 +18,11 @@
 	<script src="js/sweetalert2.min.js" ></script>
 	<script src="js/jquery.mCustomScrollbar.concat.min.js" ></script>
 	<script src="js/main.js" ></script>
+	<style>
+		 .hidden {
+            display: none;
+        }
+	</style>
 </head>
 <body>
 	<!-- Notifications area -->
@@ -34,42 +39,75 @@
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde aut nulla accusantium minus corporis accusamus fuga harum natus molestias necessitatibus.
+					Aqui puedes gestionar los gastos
 				</p>
 			</div>
 		</section>
 		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
 			<div class="mdl-tabs__tab-bar">
-				<a href="#tabNewPayment" class="mdl-tabs__tab is-active">NEW</a>
-				<a href="#tabListPayment" class="mdl-tabs__tab">LIST</a>
+				<a href="#tabNewPayment" class="mdl-tabs__tab is-active">Nuevo</a>
+				<a href="#tabListPayment" class="mdl-tabs__tab">Listar</a>
 			</div>
 			<div class="mdl-tabs__panel is-active" id="tabNewPayment">
 				<div class="mdl-grid">
 					<div class="mdl-cell mdl-cell--12-col">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-primary text-center tittles">
-								New Payment
+								Nuevo Gasto
 							</div>
 							<div class="full-width panel-content">
-								<form>
+								<form action = "backend/gastos.php" method = "POST">
+									<input type = "hidden" name = "accion" value = "crear">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; DATA PAYMENT</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos gasto</legend><br>
 									    </div>
-									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NamePayment">
-												<label class="mdl-textfield__label" for="NamePayment">Name</label>
-												<span class="mdl-textfield__error">Invalid name</span>
+												<input type="checkbox" id="toggleSwitch">
+												<label for="toggleSwitch">Con documento</label>
 											</div>
 									    </div>
+										<div id="documentInput" class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet hidden">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" id="documentNumber" name = "documento">
+												<label class="mdl-textfield__label" for="NamePayment">Ingresa el documento</label>
+												<span class="mdl-textfield__error">Invalid documento</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--12-col">
+											<div class="mdl-textfield mdl-js-textfield">
+											<select id="proveedor" name="id_proveedor" class="mdl-textfield__input">
+													<option value="">-- Seleccionar proveedor --</option>
+													<?php
+														require 'backend/conexion.php';
+
+														// Buscar todos los roles en la base de datos
+														$stmt = $pdo->prepare("SELECT * FROM proveedores"); // Asegúrate de que la tabla tenga estos campos
+														$stmt->execute();
+														
+														// Recorrer los resultados y agregarlos al select
+														while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['Razon_Social']) . " - " . htmlspecialchars($row['RUC']) ."</option>";
+														}
+													?>
+												</select>
+											</div>
+										</div>
 									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="descriptionPayment">
-												<label class="mdl-textfield__label" for="descriptionPayment">Description</label>
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="descriptionPayment" name = "descripcion">
+												<label class="mdl-textfield__label" for="descriptionPayment">Descripción</label>
 												<span class="mdl-textfield__error">Invalid description</span>
 											</div>
 									    </div>
+										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="Mount" name="monto">
+												<label class="mdl-textfield__label" for="PriceProduct">Monto</label>
+												<span class="mdl-textfield__error">Invalid mount</span>
+											</div>
+										</div>
 									</div>
 									<p class="text-center">
 										<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored bg-primary" id="btn-addPayment">
@@ -137,5 +175,11 @@
 			</div>
 		</div>
 	</section>
+	<script>
+        document.getElementById("toggleSwitch").addEventListener("change", function() {
+            let documentInput = document.getElementById("documentInput");
+            documentInput.classList.toggle("hidden", !this.checked);
+        });
+    </script>
 </body>
 </html>
