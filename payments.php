@@ -104,7 +104,7 @@
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="Mount" name="monto">
-												<label class="mdl-textfield__label" for="PriceProduct">Monto</label>
+												<label class="mdl-textfield__label" for="PriceProduct">Monto (S/)</label>
 												<span class="mdl-textfield__error">Invalid mount</span>
 											</div>
 										</div>
@@ -126,7 +126,7 @@
 					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-cell--2-offset-desktop">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-success text-center tittles">
-								List Payments
+								Listar Gastos
 							</div>
 							<div class="full-width panel-content">
 								<form action="#">
@@ -141,32 +141,26 @@
 									</div>
 								</form>
 								<div class="mdl-list">
+								<?php
+									require 'backend/conexion.php';
+
+									// Buscar todos los usuarios en la base de datos
+									$stmt = $pdo->prepare("SELECT * FROM gastos"); // Asegúrate de que la tabla tenga estos campos
+									$stmt->execute();
+														
+									// Recorrer los resultados y agregarlos a la lista
+									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									?>
 									<div class="mdl-list__item mdl-list__item--two-line">
 										<span class="mdl-list__item-primary-content">
 											<i class="zmdi zmdi-card mdl-list__item-avatar"></i>
-											<span>1. Payment method</span>
-											<span class="mdl-list__item-sub-title">Sub tittle</span>
+											<span><?php echo $row['Descripcion'] ?></span>
+											<span class="mdl-list__item-sub-title">S/ <?php echo $row['Monto'] ?></span>
 										</span>
 										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
 									</div>
 									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-card mdl-list__item-avatar"></i>
-											<span>2. Payment method</span>
-											<span class="mdl-list__item-sub-title">Sub tittle</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
-									<li class="full-width divider-menu-h"></li>
-									<div class="mdl-list__item mdl-list__item--two-line">
-										<span class="mdl-list__item-primary-content">
-											<i class="zmdi zmdi-card mdl-list__item-avatar"></i>
-											<span>3. Payment method</span>
-											<span class="mdl-list__item-sub-title">Sub tittle</span>
-										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
-									</div>
+									<?php } ?>
 								</div>
 							</div>
 						</div>
