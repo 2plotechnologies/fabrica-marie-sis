@@ -122,7 +122,7 @@
 					<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-cell--2-offset-desktop">
 						<div class="full-width panel mdl-shadow--2dp">
 							<div class="full-width panel-tittle bg-success text-center tittles">
-								Listar Gastos
+								Listar Promociones
 							</div>
 							<div class="full-width panel-content">
 								<form action="#">
@@ -141,7 +141,7 @@
 									require 'backend/conexion.php';
 
 									// Buscar todos los usuarios en la base de datos
-									$stmt = $pdo->prepare("SELECT * FROM gastos"); // Asegúrate de que la tabla tenga estos campos
+									$stmt = $pdo->prepare("SELECT * FROM promociones"); // Asegúrate de que la tabla tenga estos campos
 									$stmt->execute();
 														
 									// Recorrer los resultados y agregarlos a la lista
@@ -151,7 +151,7 @@
 										<span class="mdl-list__item-primary-content">
 											<i class="zmdi zmdi-card mdl-list__item-avatar"></i>
 											<span><?php echo $row['Descripcion'] ?></span>
-											<span class="mdl-list__item-sub-title">S/ <?php echo $row['Monto'] ?></span>
+											<span class="mdl-list__item-sub-title">S/ <?php echo $row['Nuevo_Precio'] ?></span>
 										</span>
 										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
 									</div>
