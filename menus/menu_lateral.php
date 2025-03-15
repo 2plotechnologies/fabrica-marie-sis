@@ -79,6 +79,16 @@
 									</div> 
 								</a>
 							</li>
+							<li class="full-width">
+								<a href="promotions.php" class="full-width">
+									<div class="navLateral-body-cl">
+										<i class="zmdi zmdi-card-giftcard"></i>
+									</div>
+									<div class="navLateral-body-cr">
+										Promociones
+									</div>
+								</a>
+							</li>
 						</ul>
 					</li>
 					<li class="full-width divider-menu-h"></li>
