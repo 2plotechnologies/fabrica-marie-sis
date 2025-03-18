@@ -28,6 +28,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     if (!isset($productos[$id_producto])) {
         $productos[$id_producto] = [
+            "Id" => $id_producto,
             "Nombre" => $row['Nombre'],
             "Imagen" => $row['Imagen'],
             "Produccion_Actual" => $row['Produccion_Actual'],
@@ -60,9 +61,13 @@ foreach ($productos as $producto) {
     $html .= '</div>
                 <div class="mdl-card__actions mdl-card--border">
                     ' . htmlspecialchars($producto['Nombre']) . '
-                    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" onclick="mostrarOpciones(this, '. htmlspecialchars($producto['Id']) . ')">
                         <i class="zmdi zmdi-more"></i>
                     </button>
+                    <div id="opciones-flotantes'. htmlspecialchars($producto['Id']) . '" class = "hidden">
+							<button onclick="verDetalles('. htmlspecialchars($producto['Id']) . ')">Ver detalles</button>
+							<button onclick="desactivarProducto('. htmlspecialchars($producto['Id']) .')">Desactivar</button>
+						</div>
                 </div>
             </div>';
 }

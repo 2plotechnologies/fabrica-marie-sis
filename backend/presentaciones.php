@@ -18,6 +18,27 @@
             } else {
                 echo "Error en la creación.";
             }
+        } else if($accion == 'asignar'){
+            $id_producto = $_POST["id_producto"] ?? "";
+            $id_presentacion = $_POST["id_presentacion"] ?? "";
+            $precio = $_POST["precio_unitario"] ?? "";
+            $descuento = $_POST["descuento"] ?? "";
+        
+            try {
+                $sql = "INSERT INTO Producto_Presentacion (Id_Producto, Id_Presentacion, Precio_Unitario, Descuento)
+                        VALUES (:id_producto, :id_presentacion, :precio, :descuento)";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ":id_producto" => $id_producto,
+                    ":id_presentacion" => $id_presentacion,
+                    ":precio" => $precio,
+                    ":descuento" => $descuento
+                ]);
+        
+                echo json_encode(["mensaje" => "Presentación asignada con éxito"]);
+            } catch (PDOException $e) {
+                echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+            }
         }
     }
 

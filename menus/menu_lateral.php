@@ -162,10 +162,10 @@
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
 							<div class="navLateral-body-cl">
-								<i class="zmdi zmdi-wrench"></i>
+								<i class="zmdi zmdi-receipt"></i>
 							</div>
 							<div class="navLateral-body-cr">
-								SETTINGS
+								Reportes
 							</div>
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>

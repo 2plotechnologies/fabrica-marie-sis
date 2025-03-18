@@ -33,13 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Insertar datos en la base de datos
         try {
             // Insertar producto
-            $sql = "INSERT INTO productos (Nombre, Precio_Unitario, Descuento, Produccion_Actual, Fecha_Creacion, Estado, Imagen) 
-                    VALUES (:nombre, :precio, :descuento, :produccion, :fecha, :estado, :imagen)";
+            $sql = "INSERT INTO productos (Nombre, Produccion_Actual, Fecha_Creacion, Estado, Imagen) 
+                    VALUES (:nombre, :produccion, :fecha, :estado, :imagen)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ":nombre" => $nombre,
-                ":precio" => $precio,
-                ":descuento" => $descuento,
                 ":produccion" => $stock,
                 ":fecha" => $fecha,
                 ":estado" => $estado,
@@ -63,6 +61,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } catch (PDOException $e) {
             echo "<script>alert('Error: " . $e->getMessage() . "'); window.history.back();</script>";
         }    
+    } else if ($accion == 'desactivar'){
+       // $id = $_POST["id"] ?? "";
+
+        $id = $_POST["id"] ?? "";
+
+        try {
+            $sql = "UPDATE productos SET Estado = '0' WHERE Id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([":id" => $id]);
+
+            echo json_encode(["mensaje" => "Producto desactivado con éxito"]);
+        } catch (PDOException $e) {
+            echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+        }
+    } else if ($accion == 'obtener'){
+        $id = $_POST["id"] ?? "";
+        
+        if ($id > 0) {
+            // Obtener datos del producto
+            $stmt = $pdo->prepare("SELECT * FROM productos WHERE Id = ?");
+            $stmt->execute([$id]);
+            $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Obtener presentaciones asociadas al producto
+            $stmt = $pdo->prepare("SELECT pr.Id, pr.Presentacion, pp.Precio_Unitario, pp.Descuento 
+                                FROM Producto_Presentacion pp 
+                                INNER JOIN Presentaciones pr ON pp.Id_Presentacion = pr.Id
+                                WHERE pp.Id_Producto = ?");
+            $stmt->execute([$id]);
+            $presentaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Obtener todas las opciones de presentación disponibles
+            $stmt = $pdo->prepare("SELECT Id, Presentacion FROM Presentaciones");
+            $stmt->execute();
+            $opcionesPresentacion = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode(["producto" => $producto, "presentaciones" => $presentaciones, "opcionesPresentacion" => $opcionesPresentacion]);
+        } else {
+            echo json_encode(["error" => "Producto no encontrado"]);
+        }
+    } else if ($accion == 'actualizar'){
+        $id = $_POST["productoId"] ?? "";
+        $nombre = $_POST["nombre"] ?? "";
+        $produccion = $_POST["produccion"] ?? "";
+
+        try {
+            $sql = "UPDATE productos SET Nombre = :nombre,
+                    Produccion_Actual = :produccion
+                    WHERE Id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ":nombre" => $nombre,
+                ":precio" => $precio,
+                ":id" => $id
+            ]);
+
+            echo json_encode(["mensaje" => "Producto actualizado con éxito"]);
+        } catch (PDOException $e) {
+            echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+        }
     }
 }
 ?>
