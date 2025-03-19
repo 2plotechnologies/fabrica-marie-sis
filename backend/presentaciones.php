@@ -21,18 +21,20 @@
         } else if($accion == 'asignar'){
             $id_producto = $_POST["id_producto"] ?? "";
             $id_presentacion = $_POST["id_presentacion"] ?? "";
+            $produccion_actual = $_POST["produccion_actual"] ?? "";
             $precio = $_POST["precio_unitario"] ?? "";
             $descuento = $_POST["descuento"] ?? "";
         
             try {
-                $sql = "INSERT INTO Producto_Presentacion (Id_Producto, Id_Presentacion, Precio_Unitario, Descuento)
-                        VALUES (:id_producto, :id_presentacion, :precio, :descuento)";
+                $sql = "INSERT INTO Producto_Presentacion (Id_Producto, Id_Presentacion, Precio_Unitario, Descuento, Produccion_Actual)
+                        VALUES (:id_producto, :id_presentacion, :precio, :descuento, :produccion)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
                     ":id_producto" => $id_producto,
                     ":id_presentacion" => $id_presentacion,
                     ":precio" => $precio,
-                    ":descuento" => $descuento
+                    ":descuento" => $descuento,
+                    ":produccion" => $produccion_actual
                 ]);
         
                 echo json_encode(["mensaje" => "Presentación asignada con éxito"]);

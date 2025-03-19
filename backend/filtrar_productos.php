@@ -5,7 +5,7 @@ require 'conexion.php';
 $id_presentacion = isset($_POST["id_presentacion"]) ? intval($_POST["id_presentacion"]) : 0;
 
 $sql = "
-    SELECT p.Id, p.Nombre, p.Imagen, p.Produccion_Actual, pr.Presentacion, pp.Precio_Unitario 
+    SELECT p.Id, p.Nombre, p.Imagen, pp.Produccion_Actual, pr.Presentacion, pp.Precio_Unitario 
     FROM productos p
     INNER JOIN Producto_Presentacion pp ON p.Id = pp.Id_Producto
     INNER JOIN Presentaciones pr ON pp.Id_Presentacion = pr.Id
@@ -31,7 +31,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             "Id" => $id_producto,
             "Nombre" => $row['Nombre'],
             "Imagen" => $row['Imagen'],
-            "Produccion_Actual" => $row['Produccion_Actual'],
             "Presentaciones" => []
         ];
     }
@@ -39,7 +38,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     // Agregar presentaciones y precios
     $productos[$id_producto]["Presentaciones"][] = [
         "Presentacion" => $row['Presentacion'],
-        "Precio_Unitario" => $row['Precio_Unitario']
+        "Precio_Unitario" => $row['Precio_Unitario'],
+        "Produccion_Actual" => $row['Produccion_Actual'],
     ];
 }
 
@@ -51,11 +51,11 @@ foreach ($productos as $producto) {
                     <img src="' . htmlspecialchars($producto['Imagen']) . '" alt="product" class="img-responsive">
                 </div>
                 <div class="mdl-card__supporting-text">
-                    <small>Producción Actual: ' . htmlspecialchars($producto['Produccion_Actual']) . '</small><br>
                     <strong>Presentaciones y Precios:</strong><br>';
 
     foreach ($producto["Presentaciones"] as $presentacion) {
         $html .= '<small>' . htmlspecialchars($presentacion["Presentacion"]) . ': S/' . htmlspecialchars($presentacion["Precio_Unitario"]) . '</small><br>';
+        $html .= '<small>Producción Actual: ' . htmlspecialchars($presentacion['Produccion_Actual']) . '</small><br>';
     }
 
     $html .= '</div>

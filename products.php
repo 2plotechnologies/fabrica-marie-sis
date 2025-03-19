@@ -225,9 +225,6 @@
 				<label>Nombre:</label>
 				<input type="text" id="nombre" name="nombre">
 				
-				<label>Producción Actual:</label>
-				<input type="number" id="produccion" name="produccion">
-				
 				<label>Estado:</label>
 				<input type="text" id="estado" name="estado" disabled>
 
@@ -239,6 +236,7 @@
 				<thead>
 					<tr>
 						<th>Presentación</th>
+						<th>Producción actual</th>
 						<th>Precio Unitario</th>
 						<th>Descuento</th>
 					</tr>
@@ -254,6 +252,9 @@
 				<select id="selectPresentacion" name="id_presentacion">
 					<!-- Se llenará con JavaScript -->
 				</select>
+
+				<label>Producción actual:</label>
+				<input type="number" id="nuevoStock" name="produccion_actual">
 
 				<label>Precio Unitario:</label>
 				<input type="number" id="nuevoPrecio" name="precio_unitario">
@@ -337,7 +338,6 @@
 						// Cargar datos generales del producto
 						document.getElementById("productoId").value = data.producto.Id;
 						document.getElementById("nombre").value = data.producto.Nombre;
-						document.getElementById("produccion").value = data.producto.Produccion_Actual;
 						if(data.producto.Estado === 1){
 							document.getElementById("estado").value = "Activo";
 						}else{
@@ -353,6 +353,7 @@
 							let fila = `
 								<tr>
 									<td>${presentacion.Presentacion}</td>
+									<td>${presentacion.Produccion_Actual}</td>
 									<td>${presentacion.Precio_Unitario}</td>
 									<td>${presentacion.Descuento}</td>
 								</tr>

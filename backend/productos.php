@@ -33,12 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Insertar datos en la base de datos
         try {
             // Insertar producto
-            $sql = "INSERT INTO productos (Nombre, Produccion_Actual, Fecha_Creacion, Estado, Imagen) 
-                    VALUES (:nombre, :produccion, :fecha, :estado, :imagen)";
+            $sql = "INSERT INTO productos (Nombre, Fecha_Creacion, Estado, Imagen) 
+                    VALUES (:nombre, :fecha, :estado, :imagen)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ":nombre" => $nombre,
-                ":produccion" => $stock,
                 ":fecha" => $fecha,
                 ":estado" => $estado,
                 ":imagen" => $imagen_ruta
@@ -48,13 +47,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $producto_id = $pdo->lastInsertId();
         
             // Insertar en la tabla Producto_Presentacion
-            $sql_presentacion = "INSERT INTO Producto_Presentacion (Id_Producto, Id_Presentacion, Precio_Unitario, Descuento) VALUES (:producto_id, :presentacion_id, :precio, :descuento)";
+            $sql_presentacion = "INSERT INTO Producto_Presentacion (Id_Producto, Id_Presentacion, Precio_Unitario, Descuento, Produccion_Actual) VALUES (:producto_id, :presentacion_id, :precio, :descuento, :produccion)";
             $stmt_presentacion = $pdo->prepare($sql_presentacion);
             $stmt_presentacion->execute([
                 ":producto_id" => $producto_id,
                 ":presentacion_id" => $id_presentacion,
                 ":precio" => $precio,
-                ":descuento" => $descuento  // Debes asegurarte de que este valor viene del formulario
+                ":descuento" => $descuento,
+                ":produccion" => $stock  // Debes asegurarte de que este valor viene del formulario
             ]);
         
             echo "<script>alert('Producto registrado con éxito'); window.location.href = '../products.php';</script>";
@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $producto = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // Obtener presentaciones asociadas al producto
-            $stmt = $pdo->prepare("SELECT pr.Id, pr.Presentacion, pp.Precio_Unitario, pp.Descuento 
+            $stmt = $pdo->prepare("SELECT pr.Id, pr.Presentacion, pp.Precio_Unitario, pp.Descuento, pp.Produccion_Actual 
                                 FROM Producto_Presentacion pp 
                                 INNER JOIN Presentaciones pr ON pp.Id_Presentacion = pr.Id
                                 WHERE pp.Id_Producto = ?");
@@ -107,13 +107,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $produccion = $_POST["produccion"] ?? "";
 
         try {
-            $sql = "UPDATE productos SET Nombre = :nombre,
-                    Produccion_Actual = :produccion
+            $sql = "UPDATE productos SET Nombre = :nombre
                     WHERE Id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ":nombre" => $nombre,
-                ":precio" => $precio,
                 ":id" => $id
             ]);
 
