@@ -32,22 +32,90 @@
 		}
 
 		.modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-    .modal-content {
-        background-color: white;
-        padding: 20px;
-        margin: 10% auto;
-        width: 50%;
-    }
-    .close { float: right; cursor: pointer; }
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			justify-content: center;
+			align-items: center;
+			overflow-y: auto;
+		}
+
+		.modal-content {
+			background: white;
+			padding: 20px;
+			width: 40%;
+			max-width: 600px;
+			margin: auto;
+			border-radius: 10px;
+			box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+			overflow-y: auto;
+		}
+
+		.close {
+			float: right;
+			font-size: 24px;
+			cursor: pointer;
+		}
+
+		h2, h3 {
+			text-align: center;
+			color: #333;
+		}
+
+		.input-field {
+			width: 90%;
+			padding: 10px;
+			margin: 5px 0;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+		}
+
+		.btn {
+			width: 100%;
+			padding: 10px;
+			margin-top: 10px;
+			border: none;
+			border-radius: 5px;
+			background: #007BFF;
+			color: white;
+			font-size: 16px;
+			cursor: pointer;
+		}
+
+		.btn:hover {
+			background: #0056b3;
+		}
+
+		.btn-secondary {
+			background: #28a745;
+		}
+
+		.btn-secondary:hover {
+			background: #218838;
+		}
+
+		.styled-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			overflow-y: auto;
+		}
+
+		.styled-table th, .styled-table td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.styled-table th {
+			background: #f4f4f4;
+		}
 
 	</style>
 </head>
@@ -216,29 +284,30 @@
 	<div id="modalProducto" class="modal hidden">
 		<div class="modal-content">
 			<span class="close" onclick="cerrarModal()">&times;</span>
-			<h2>Detalles del Producto</h2>
+			<h4>Detalles del Producto</h4>
 
 			<form id="formProducto">
-				<input type="hidden" id="productoId" name = "productoId">
-				<input type="hidden" id="accion" name = "accion" value = "actualizar">
+				<input type="hidden" id="productoId" name="productoId">
+				<input type="hidden" id="accion" name="accion" value="actualizar">
 				
-				<label>Nombre:</label>
-				<input type="text" id="nombre" name="nombre">
+				<label for="nombre">Nombre:</label>
+				<input type="text" id="nombre" name="nombre" class="input-field">
 				
-				<label>Estado:</label>
-				<input type="text" id="estado" name="estado" disabled>
+				<label for="estado">Estado:</label>
+				<input type="text" id="estado" name="estado" class="input-field" disabled>
 
-				<button type="button" onclick="actualizarProducto()">Actualizar</button>
+				<button type="button" class="btn" onclick="actualizarProducto()">Actualizar</button>
 			</form>
 
-			<h3>Presentaciones</h3>
-			<table border="1">
+			<h5>Presentaciones</h5>
+			<table class="styled-table">
 				<thead>
 					<tr>
 						<th>Presentación</th>
 						<th>Producción actual</th>
 						<th>Precio Unitario</th>
 						<th>Descuento</th>
+						<th>Acciones</th>
 					</tr>
 				</thead>
 				<tbody id="listaPresentaciones">
@@ -246,23 +315,23 @@
 				</tbody>
 			</table>
 
-			<h3>Asignar Nueva Presentación</h3>
+			<h5>Asignar Nueva Presentación</h5>
 			<form id="formPresentacion">
-				<label>Seleccionar Presentación:</label>
-				<select id="selectPresentacion" name="id_presentacion">
+				<label for="selectPresentacion">Seleccionar Presentación:</label>
+				<select id="selectPresentacion" name="id_presentacion" class="input-field">
 					<!-- Se llenará con JavaScript -->
 				</select>
 
-				<label>Producción actual:</label>
-				<input type="number" id="nuevoStock" name="produccion_actual">
+				<label for="nuevoStock">Producción actual:</label>
+				<input type="number" id="nuevoStock" name="produccion_actual" class="input-field">
 
-				<label>Precio Unitario:</label>
-				<input type="number" id="nuevoPrecio" name="precio_unitario">
+				<label for="nuevoPrecio">Precio Unitario:</label>
+				<input type="number" id="nuevoPrecio" name="precio_unitario" class="input-field">
 
-				<label>Descuento:</label>
-				<input type="number" id="nuevoDescuento" name="descuento">
+				<label for="nuevoDescuento">Descuento:</label>
+				<input type="number" id="nuevoDescuento" name="descuento" class="input-field">
 
-				<button type="button" onclick="asignarPresentacion()">Asignar Presentación</button>
+				<button type="button" class="btn btn-secondary" onclick="asignarPresentacion()">Asignar Presentación</button>
 			</form>
 		</div>
 	</div>
@@ -356,6 +425,7 @@
 									<td>${presentacion.Produccion_Actual}</td>
 									<td>${presentacion.Precio_Unitario}</td>
 									<td>${presentacion.Descuento}</td>
+									<td><button class "btn btn-secondary">Actualizar</button> <button class "btn btn-danger">Quitar</button></td>
 								</tr>
 							`;
 							tabla.innerHTML += fila;
