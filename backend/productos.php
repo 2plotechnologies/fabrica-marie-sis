@@ -119,6 +119,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } catch (PDOException $e) {
             echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
         }
-    }
+    }else if ($accion == 'activar'){
+        // $id = $_POST["id"] ?? "";
+ 
+         $id = $_POST["id"] ?? "";
+ 
+         try {
+             $sql = "UPDATE productos SET Estado = '1' WHERE Id = :id";
+             $stmt = $pdo->prepare($sql);
+             $stmt->execute([":id" => $id]);
+ 
+             echo json_encode(["mensaje" => "Producto activado con éxito"]);
+         } catch (PDOException $e) {
+             echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+         }
+     }
 }
 ?>

@@ -678,6 +678,51 @@ html, body{
 .product-card .mdl-card__actions a{
 	float: right;
 }
+/* Estilos generales para los botones */
+.boton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px; /* Esquinas redondeadas */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+/* Botón verde */
+.boton-verde {
+    background-color: #28a745;
+    color: white;
+}
+
+.boton-verde:hover {
+    background-color: #218838;
+}
+
+/* Botón rojo */
+.boton-rojo {
+    background-color: #dc3545;
+    color: white;
+}
+
+.boton-rojo:hover {
+    background-color: #c82333;
+}
+
+/* Botón amarillo */
+.boton-amarillo {
+    background-color: #ffc107;
+    color: black;
+}
+
+.boton-amarillo:hover {
+    background-color: #e0a800;
+}
+
+/* Efecto de presión */
+.boton:active {
+    transform: scale(0.95);
+}
+
 /*=====================================================
 					Media  Queries
 ======================================================*/

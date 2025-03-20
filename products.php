@@ -386,6 +386,28 @@
 				}
 			}
 
+			// Función para activar producto
+			function activarProducto(id) {
+				let productoId = document.getElementById("opciones-flotantes" + id).dataset.productoId;
+				let confirmar = confirm("¿Seguro que deseas activar el producto ID " + productoId + "?");
+				
+				if (confirmar) {
+					fetch("backend/productos.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id=${productoId}&accion=activar`
+					})
+					.then(response => response.json()) // Convertir la respuesta en JSON
+					.then(data => {
+						alert(data.mensaje); // Mostrar el mensaje recibido
+						document.getElementById("opciones-flotantes").classList.add("hidden");
+					})
+					.catch(error => console.error("Error:", error));
+				}
+			}
+
 			// Ocultar menú flotante al hacer clic fuera
 			document.addEventListener("click", function(event) {
 				let menu = document.getElementById("opciones-flotantes" + productoId);
@@ -425,7 +447,7 @@
 									<td>${presentacion.Produccion_Actual}</td>
 									<td>${presentacion.Precio_Unitario}</td>
 									<td>${presentacion.Descuento}</td>
-									<td><button class "btn btn-secondary">Actualizar</button> <button class "btn btn-danger">Quitar</button></td>
+									<td><button class="boton boton-amarillo"><i class="zmdi zmdi-edit"></i></button> <button class="boton boton-rojo"><i class="zmdi zmdi-delete"></i></button></td>
 								</tr>
 							`;
 							tabla.innerHTML += fila;

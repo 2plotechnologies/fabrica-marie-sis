@@ -5,7 +5,7 @@ require 'conexion.php';
 $id_presentacion = isset($_POST["id_presentacion"]) ? intval($_POST["id_presentacion"]) : 0;
 
 $sql = "
-    SELECT p.Id, p.Nombre, p.Imagen, pp.Produccion_Actual, pr.Presentacion, pp.Precio_Unitario 
+    SELECT p.Id, p.Nombre, p.Imagen, p.Estado, pp.Produccion_Actual, pr.Presentacion, pp.Precio_Unitario 
     FROM productos p
     INNER JOIN Producto_Presentacion pp ON p.Id = pp.Id_Producto
     INNER JOIN Presentaciones pr ON pp.Id_Presentacion = pr.Id
@@ -31,6 +31,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             "Id" => $id_producto,
             "Nombre" => $row['Nombre'],
             "Imagen" => $row['Imagen'],
+            "Estado" => $row['Estado'],
             "Presentaciones" => []
         ];
     }
@@ -65,11 +66,18 @@ foreach ($productos as $producto) {
                         <i class="zmdi zmdi-more"></i>
                     </button>
                     <div id="opciones-flotantes'. htmlspecialchars($producto['Id']) . '" class = "hidden">
-							<button onclick="verDetalles('. htmlspecialchars($producto['Id']) . ')">Ver detalles</button>
-							<button onclick="desactivarProducto('. htmlspecialchars($producto['Id']) .')">Desactivar</button>
+							<button class="boton boton-verde" onclick="verDetalles('. htmlspecialchars($producto['Id']) . ')">Ver detalles</button>';
+    if($producto["Estado"] == 1){
+        $html.= '<button class="boton boton-rojo" onclick="desactivarProducto('. htmlspecialchars($producto['Id']) .')">Desactivar</button>
 						</div>
                 </div>
             </div>';
+    }else{
+        $html.= '<button class="boton boton-verde" onclick="activarProducto('. htmlspecialchars($producto['Id']) .')">Activar</button>
+						</div>
+                </div>
+            </div>';
+    }
 }
 
 // Devolver el HTML completo en una sola salida
