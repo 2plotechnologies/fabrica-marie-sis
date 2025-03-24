@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
     // Buscar usuario en la base de datos
-    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE DNI = ?");
+    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE DNI = ? AND Estado = 1");
     $stmt->execute([$dni]);
     $user = $stmt->fetch();
 

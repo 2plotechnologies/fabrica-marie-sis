@@ -40,6 +40,11 @@
 		</section>
 		<div class="full-width divider-menu-h"></div>
 		<div class="mdl-grid">
+		<div class="mdl-cell mdl-cell--12-col">
+			<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" href="new_sale.php">
+				Nueva Venta
+			</a>
+		</div>
 			<div class="mdl-cell mdl-cell--4-col-phone mdl-cell--8-col-tablet mdl-cell--12-col-desktop">
 				<div class="table-responsive">
 					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width table-responsive">
