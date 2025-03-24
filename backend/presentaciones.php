@@ -41,6 +41,22 @@
             } catch (PDOException $e) {
                 echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
             }
+        }else if($accion == 'quitar'){
+            $id_producto = $_POST["id_producto"] ?? "";
+            $id_presentacion = $_POST["id_presentacion"] ?? "";
+            
+            try {
+                $sql = "DELETE FROM Producto_Presentacion WHERE Id_Producto = :id_producto AND Id_Presentacion = :id_presentacion";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ":id_producto" => $id_producto,
+                    ":id_presentacion" => $id_presentacion
+                ]);
+        
+                echo json_encode(["mensaje" => "Presentación quitada con éxito"]);
+            } catch (PDOException $e) {
+                echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+            }
         }
     }
 

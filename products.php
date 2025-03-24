@@ -447,7 +447,7 @@
 									<td>${presentacion.Produccion_Actual}</td>
 									<td>${presentacion.Precio_Unitario}</td>
 									<td>${presentacion.Descuento}</td>
-									<td><button class="boton boton-amarillo"><i class="zmdi zmdi-edit"></i></button> <button class="boton boton-rojo"><i class="zmdi zmdi-delete"></i></button></td>
+									<td><button class="boton boton-rojo" onclick="quitarPresentacion(${idProducto}, ${presentacion.Id})"><i class="zmdi zmdi-delete"></i></button></td>
 								</tr>
 							`;
 							tabla.innerHTML += fila;
@@ -508,6 +508,24 @@
 			.catch(error => console.error("Error al actualizar:", error));
 		}
 
+		function quitarPresentacion(idProducto, idPresentacion){
+			let confirmar = confirm("¿Seguro que deseas quitar la presentación");
+			if(confirmar){
+				fetch("backend/presentaciones.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id_producto=${idProducto}&id_presentacion=${idPresentacion}&accion=quitar`
+				})
+				.then(response => response.json())
+				.then(data => {
+					alert(data.mensaje);
+					verDetalles(document.getElementById("productoId").value);
+				})
+				.catch(error => console.error("Error al quitar:", error));
+			}
+		}
 			
 		</script>
 </body>
