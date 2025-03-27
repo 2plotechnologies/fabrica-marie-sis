@@ -83,7 +83,7 @@
 														require 'backend/conexion.php';
 
 														// Buscar todos los roles en la base de datos
-														$stmt = $pdo->prepare("SELECT * FROM proveedores"); // Asegúrate de que la tabla tenga estos campos
+														$stmt = $pdo->prepare("SELECT * FROM proveedores WHERE Estado = 1"); // Asegúrate de que la tabla tenga estos campos
 														$stmt->execute();
 														
 														// Recorrer los resultados y agregarlos al select
