@@ -136,19 +136,19 @@
                                     <div class="mdl-cell mdl-cell--4-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                             <input class="mdl-textfield__input" type="text" id="subtotal" readonly>
-                                            <label class="mdl-textfield__label" for="subtotal">Subtotal</label>
+                                            <label for="subtotal">Subtotal</label>
                                         </div>
                                     </div>
                                     <div class="mdl-cell mdl-cell--4-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                             <input class="mdl-textfield__input" type="text" id="igv" readonly>
-                                            <label class="mdl-textfield__label" for="igv">IGV</label>
+                                            <label for="igv">IGV</label>
                                         </div>
                                     </div>
                                     <div class="mdl-cell mdl-cell--4-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                             <input class="mdl-textfield__input" type="text" id="total" readonly>
-                                            <label class="mdl-textfield__label" for="total">Total</label>
+                                            <label for="total">Total</label>
                                         </div>
                                     </div>
                                 </div>
@@ -192,6 +192,8 @@
     </div>
 </dialog>
 <script>
+    let productosSeleccionados = [];
+
     document.addEventListener("DOMContentLoaded", function () {
         const openModalButton = document.getElementById("openModal");
         const modal = document.getElementById("productModal");
@@ -206,13 +208,16 @@
                     productTableBody.innerHTML = ""; // Limpiar la tabla
 
                     data.forEach(item => {
+                    
                         const row = document.createElement("tr");
+
+                        row.dataset.descuento = item.descuento || 0;
 
                         row.innerHTML = `
                             <td class="mdl-data-table__cell--non-numeric">${item.nombre}</td>
                             <td>${item.tipo}</td>
                             <td>${item.presentacion || 'N/A'}</td>
-                            <td>S/${item.precio_unitario}</td>
+                           <td data-original-price="${item.precio_unitario}">S/${item.precio_unitario}</td>
                             <td>
                                 <input type="number" class="mdl-textfield__input cantidad-input" min="1" value="${item.cantidad || 1}">
                             </td>
@@ -249,12 +254,109 @@
 
         // Evento para aplicar descuento
         productTableBody.addEventListener("click", function (event) {
-            if (event.target.classList.contains("apply-discount")) {
-                const row = event.target.closest("tr");
+            const botonDescuento = event.target.closest(".apply-discount");
+            const botonAgregar = event.target.closest(".add-product");
+
+            // Aplicar descuento
+            if (botonDescuento) {
+                const row = botonDescuento.closest("tr");
+                const precioCelda = row.children[3]; // Celda de precio
+                const originalPrecioText = precioCelda.dataset.originalPrice; // Valor original
+                const descuento = parseFloat(row.dataset.descuento || 0); // Descuento del dataset
+
+                let originalPrecio = parseFloat(originalPrecioText || precioCelda.textContent.replace("S/", ""));
+                let precioConDescuento = originalPrecio - descuento;
+
+                precioCelda.textContent = `S/${precioConDescuento.toFixed(2)}`;
+                botonDescuento.disabled = true;
+                botonDescuento.textContent = "Aplicado";
+            }
+
+            // Agregar producto
+            if (botonAgregar) {
+                const row = botonAgregar.closest("tr");
+
                 const nombre = row.children[0].textContent;
-                alert(`Aplicando descuento a ${nombre}`);
+                const tipo = row.children[1].textContent;
+                const presentacion = row.children[2].textContent;
+                const precioTexto = row.children[3].textContent.replace("S/", "");
+                const cantidad = parseInt(row.querySelector(".cantidad-input").value) || 1;
+
+                const precio = parseFloat(precioTexto);
+                const descuento = parseFloat(row.dataset.descuento || 0);
+                const precioFinal = precio; // Ya está con descuento si fue aplicado
+
+                const yaExiste = productosSeleccionados.some(p => p.nombre === nombre && p.presentacion === presentacion && p.tipo === tipo);
+                if (yaExiste) {
+                    alert("Este producto o promoción ya está en la lista");
+                    return;
+                }
+
+                productosSeleccionados.push({
+                    nombre,
+                    tipo,
+                    presentacion,
+                    cantidad,
+                    precio: precioFinal,
+                    total: cantidad * precioFinal
+                });
+
+                actualizarTablaPrincipal();
+                modal.close();
+            }
+
+        });
+
+        function actualizarTablaPrincipal() {
+            const tablaBody = document.getElementById("tablaVentasBody");
+            tablaBody.innerHTML = "";
+
+            let subtotal = 0;
+
+            productosSeleccionados.forEach((item, index) => {
+                const row = document.createElement("tr");
+
+                const total = item.cantidad * item.precio;
+                subtotal += total;
+
+                row.innerHTML = `
+                    <td class="mdl-data-table__cell--non-numeric">${item.nombre}</td>
+                    <td>${item.presentacion}</td>
+                    <td>${item.cantidad}</td>
+                    <td>S/${item.precio.toFixed(2)}</td>
+                    <td>${item.tipo}</td>
+                    <td>S/${total.toFixed(2)}</td>
+                    <td>
+                        <button class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect btn-eliminar" data-index="${index}">
+                            <i class="zmdi zmdi-delete"></i>
+                        </button>
+                    </td>
+
+                `;
+                tablaBody.appendChild(row);
+            });
+
+            const igv = subtotal * 0.18;
+            const total = subtotal + igv;
+
+            document.getElementById("subtotal").value = `S/${subtotal.toFixed(2)}`;
+            document.getElementById("igv").value = `S/${igv.toFixed(2)}`;
+            document.getElementById("total").value = `S/${total.toFixed(2)}`;
+        }
+
+        document.getElementById("tablaVentasBody").addEventListener("click", function (event) {
+            const botonEliminar = event.target.closest(".btn-eliminar");
+            if (botonEliminar) {
+                const index = parseInt(botonEliminar.dataset.index);
+                eliminarProducto(index);
             }
         });
+
+        function eliminarProducto(index) {
+            productosSeleccionados.splice(index, 1);
+            actualizarTablaPrincipal();
+        }
+
     });
 
 </script>

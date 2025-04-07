@@ -8,6 +8,7 @@
             p.Nombre AS nombre, 
             pr.Presentacion AS presentacion, 
             pp.Precio_Unitario AS precio_unitario,
+            pp.Descuento AS descuento,
             'Producto' AS tipo
         FROM productos p
         INNER JOIN producto_presentacion pp ON p.Id = pp.Id_Producto

@@ -199,7 +199,7 @@
 									require 'backend/conexion.php';
 
 									// Buscar todos los usuarios en la base de datos
-									$stmt = $pdo->prepare("SELECT * FROM usuarios"); // Asegúrate de que la tabla tenga estos campos
+									$stmt = $pdo->prepare("SELECT * FROM usuarios WHERE Estado = 1"); // Asegúrate de que la tabla tenga estos campos
 									$stmt->execute();
 														
 									// Recorrer los resultados y agregarlos a la lista
