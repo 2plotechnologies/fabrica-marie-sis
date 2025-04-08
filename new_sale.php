@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Products</title>
+	<title>Nueva Venta</title>
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/sweetalert2.css">
 	<link rel="stylesheet" href="css/material.min.css">
@@ -30,7 +30,7 @@
 		<?php include('menus/menu_navbar.php'); ?>
 		<section class="full-width header-well">
 			<div class="full-width header-well-icon">
-				<i class="zmdi zmdi-washing-machine"></i>
+            <i class="zmdi zmdi-shopping-cart"></i>
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
