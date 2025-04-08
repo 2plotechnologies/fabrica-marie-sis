@@ -51,6 +51,11 @@
                             </div>
                             <div class="full-width panel-content">
                                 <div class="mdl-grid">
+                                <div class="mdl-cell mdl-cell--6-col">
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                            <input class="mdl-textfield__input" type="date" name="fecha" value="<?php echo date('Y-m-d'); ?>">
+                                        </div>
+                                    </div>
                                     <div class="mdl-cell mdl-cell--6-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                             <select class="mdl-textfield__input" id="cliente">
@@ -93,19 +98,28 @@
                                     <?php } ?>
                                     <div class="mdl-cell mdl-cell--6-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <select class="mdl-textfield__input" id="cliente">
+                                            <select class="mdl-textfield__input" id="tipo_pago">
                                                 <option value="">-- Seleccionar Tipo Pago --</option>
-                                                <option value="co">Contado</option>
-                                                <option value="cr">Credito</option>
+                                                <option value="1">Contado</option>
+                                                <option value="2">Credito</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="mdl-cell mdl-cell--6-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <select class="mdl-textfield__input" id="cliente">
+                                            <select class="mdl-textfield__input" id="region">
                                                 <option value="">-- Seleccionar Región --</option>
-                                                <option value="co">Huancayo</option>
-                                                <option value="cr">Selva Central</option>
+                                                <option value="1">Huancayo</option>
+                                                <option value="2">Selva Central</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mdl-cell mdl-cell--6-col">
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                            <select class="mdl-textfield__input" id="metodo">
+                                                <option value="">-- Seleccionar Método Pago --</option>
+                                                <option value="1">Efectivo</option>
+                                                <option value="2">Tarjeta</option>
                                             </select>
                                         </div>
                                     </div>
@@ -358,6 +372,50 @@
         }
 
     });
+
+    document.getElementById("btn-finalizarVenta").addEventListener("click", function () {
+        const fecha = document.querySelector('input[name="fecha"]').value;
+        const cliente = document.getElementById("cliente").value;
+        const vendedor = document.getElementById("vendedor")?.value || null;
+        const tipo_pago = document.getElementById("tipo_pago").value;
+        const region = document.getElementById("region").value;
+        const metodo = document.getElementById("metodo").value;
+        const subtotal = document.getElementById("subtotal").value.replace("S/", "");
+        const igv = document.getElementById("igv").value.replace("S/", "");
+        const total = document.getElementById("total").value.replace("S/", "");
+
+        if (!cliente || !tipo_pago || !region || !metodo || productosSeleccionados.length === 0) {
+            alert("Por favor complete todos los campos y agregue al menos un producto o promoción.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("fecha", fecha);
+        formData.append("cliente", cliente);
+        formData.append("vendedor", vendedor);
+        formData.append("tipo_pago", tipo_pago);
+        formData.append("region", region);
+        formData.append("metodo", metodo);
+        formData.append("subtotal", subtotal);
+        formData.append("igv", igv);
+        formData.append("total", total);
+        formData.append("detalles", JSON.stringify(productosSeleccionados));
+
+        fetch("backend/ventas/crear_venta.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.text())
+        .then(respuesta => {
+            alert("Venta registrada con éxito");
+            location.reload(); // Opcional: Recargar página para limpiar todo
+        })
+        .catch(error => {
+            console.error("Error al registrar venta:", error);
+            alert("Hubo un error al registrar la venta.");
+        });
+    });
+
 
 </script>
 </body>
