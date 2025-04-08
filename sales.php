@@ -34,7 +34,7 @@
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde aut nulla accusantium minus corporis accusamus fuga harum natus molestias necessitatibus.
+					En este apartado puedes gestionar las ventas
 				</p>
 			</div>
 		</section>
@@ -50,42 +50,35 @@
 					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width table-responsive">
 						<thead>
 							<tr>
-								<th class="mdl-data-table__cell--non-numeric">Date</th>
-								<th>Client</th>
-								<th>Payment</th>
+								<th class="mdl-data-table__cell--non-numeric">Fecha</th>
+								<th>Cliente</th>
+								<th>Tipo Pago</th>
 								<th>Total</th>
-								<th>Options</th>
+								<th>Acciones</th>
 							</tr>
 						</thead>
 						<tbody>
+						<?php
+								require 'backend/conexion.php';
+
+								// Buscar todos los usuarios en la base de datos
+								$stmt = $pdo->prepare("SELECT v.Fecha, c.NombreCliente AS Cliente, v.Tipo_Pago, v.Total
+									FROM ventas v
+									JOIN clientes c ON v.Id_Cliente = c.Id
+									ORDER BY v.Fecha DESC"); // Asegúrate de que la tabla tenga estos campos
+								$stmt->execute();
+														
+								// Recorrer los resultados y agregarlos a la lista
+								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+								?>
 							<tr>
-								<td class="mdl-data-table__cell--non-numeric">11/04/2016</td>
-								<td>Client name</td>
-								<td>Credit</td>
-								<td>$77</td>
+								<td class="mdl-data-table__cell--non-numeric"><?php echo $row['Fecha'] ?></td>
+								<td><?php echo $row['Cliente'] ?></td>
+								<td><?php if($row['Tipo_Pago'] == '1'){echo "Efectivo";}else{echo "Tarjeta";}  ?></td>
+								<td>S/<?php echo $row['Total'] ?></td>
 								<td><button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"><i class="zmdi zmdi-more"></i></button></td>
 							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">11/04/2016</td>
-								<td>Client name</td>
-								<td>Credit</td>
-								<td>$77</td>
-								<td><button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"><i class="zmdi zmdi-more"></i></button></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">11/04/2016</td>
-								<td>Client name</td>
-								<td>Credit</td>
-								<td>$77</td>
-								<td><button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"><i class="zmdi zmdi-more"></i></button></td>
-							</tr>
-							<tr>
-								<td class="mdl-data-table__cell--non-numeric">11/04/2016</td>
-								<td>Client name</td>
-								<td>Credit</td>
-								<td>$77</td>
-								<td><button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"><i class="zmdi zmdi-more"></i></button></td>
-							</tr>
+							<?php } ?>
 						</tbody>
 					</table>
 				</div>
