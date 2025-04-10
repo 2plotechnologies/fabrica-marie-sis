@@ -13,7 +13,7 @@
         FROM productos p
         INNER JOIN producto_presentacion pp ON p.Id = pp.Id_Producto
         INNER JOIN presentaciones pr ON pp.Id_Presentacion = pr.Id
-        WHERE p.Estado = 1
+        WHERE p.Estado = 1 AND pp.Produccion_Actual > 0
     ";
     $stmtProductos = $pdo->query($queryProductos);
     $productos = $stmtProductos->fetchAll(PDO::FETCH_ASSOC);

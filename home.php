@@ -1,4 +1,5 @@
-<?php session_start(); ?>
+<?php session_start();
+require 'backend/conexion.php'; ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -29,62 +30,122 @@
 		<!-- navBar -->
 		<?php include('menus/menu_navbar.php'); ?>
 		<section class="full-width text-center" style="padding: 40px 0;">
-			<h3 class="text-center tittles">RESPONSIVE TILES</h3>
+			<h3 class="text-center tittles">ESTADISTICAS GENERALES</h3>
 			<!-- Tiles -->
+			 <?php
+
+			 // Buscar todos los roles en la base de datos
+			 $stmt = $pdo->prepare("SELECT count(*) AS vendedores from usuarios where Id_Rol = 2;"); // Asegúrate de que la tabla tenga estos campos
+			 $stmt->execute();
+			 
+			 // Recorrer los resultados y agregarlos al select
+			 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				?>
 			<article class="full-width tile">
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						2<br>
-						<small>Administrators</small>
+					<?php echo $row['vendedores'] ?><br>
+						<small>Vendedores</small>
 					</span>
 				</div>
 				<i class="zmdi zmdi-account tile-icon"></i>
 			</article>
+			<?php } ?>
+			<?php
+
+			 // Buscar todos los roles en la base de datos
+			 $stmt = $pdo->prepare("SELECT count(*) AS clientes from clientes where Estado = 1;"); // Asegúrate de que la tabla tenga estos campos
+			 $stmt->execute();
+			 
+			 // Recorrer los resultados y agregarlos al select
+			 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				?>
 			<article class="full-width tile">
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						71<br>
-						<small>Clients</small>
+					<?php echo $row['clientes'] ?><br>
+						<small>Clientes</small>
 					</span>
 				</div>
 				<i class="zmdi zmdi-accounts tile-icon"></i>
 			</article>
+			<?php } ?>
+			<?php
+
+			 // Buscar todos los roles en la base de datos
+			 $stmt = $pdo->prepare("SELECT count(*) AS prove from proveedores where Estado = 1;"); // Asegúrate de que la tabla tenga estos campos
+			 $stmt->execute();
+			 
+			 // Recorrer los resultados y agregarlos al select
+			 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				?>
 			<article class="full-width tile">
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						7<br>
-						<small>Providers</small>
+					<?php echo $row['prove'] ?><br>
+						<small>Proveedores</small>
 					</span>
 				</div>
 				<i class="zmdi zmdi-truck tile-icon"></i>
 			</article>
+			<?php } ?>
+			<?php
+
+			 // Buscar todos los roles en la base de datos
+			 $stmt = $pdo->prepare("SELECT count(*) AS presentaciones from presentaciones;"); // Asegúrate de que la tabla tenga estos campos
+			 $stmt->execute();
+			 
+			 // Recorrer los resultados y agregarlos al select
+			 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				?>
 			<article class="full-width tile">
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						9<br>
-						<small>Categories</small>
+					<?php echo $row['presentaciones'] ?><br>
+						<small>Presentaciones</small>
 					</span>
 				</div>
 				<i class="zmdi zmdi-label tile-icon"></i>
 			</article>
+			<?php } ?>
+			<?php
+
+			 // Buscar todos los roles en la base de datos
+			 $stmt = $pdo->prepare("SELECT count(*) AS prods from productos WHERE Estado = 1;"); // Asegúrate de que la tabla tenga estos campos
+			 $stmt->execute();
+			 
+			 // Recorrer los resultados y agregarlos al select
+			 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				?>
 			<article class="full-width tile">
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						121<br>
-						<small>Products</small>
+					<?php echo $row['prods'] ?><br>
+						<small>Productos</small>
 					</span>
 				</div>
 				<i class="zmdi zmdi-washing-machine tile-icon"></i>
 			</article>
+			<?php } ?>
+			<?php
+
+			 // Buscar todos los roles en la base de datos
+			 $stmt = $pdo->prepare("SELECT count(*) AS ventas from ventas;"); // Asegúrate de que la tabla tenga estos campos
+			 $stmt->execute();
+			 
+			 // Recorrer los resultados y agregarlos al select
+			 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				?>
 			<article class="full-width tile">
 				<div class="tile-text">
 					<span class="text-condensedLight">
-						47<br>
-						<small>Sales</small>
+					<?php echo $row['ventas'] ?><br>
+						<small>Ventas</small>
 					</span>
 				</div>
 				<i class="zmdi zmdi-shopping-cart tile-icon"></i>
 			</article>
+			<?php } ?>
 		</section>
 		<section class="full-width" style="margin: 30px 0;">
 			<h3 class="text-center tittles">RESPONSIVE TIMELINE</h3>
