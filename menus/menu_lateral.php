@@ -171,12 +171,12 @@
 						</a>
 						<ul class="full-width menu-principal sub-menu-options">
 							<li class="full-width">
-								<a href="#!" class="full-width">
+								<a href="reporte_ventas.php" class="full-width">
 									<div class="navLateral-body-cl">
 										<i class="zmdi zmdi-widgets"></i>
 									</div>
 									<div class="navLateral-body-cr">
-										OPTION
+										Reporte de Ventas
 									</div>
 								</a>
 							</li>
