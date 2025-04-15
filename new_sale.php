@@ -149,20 +149,8 @@
                                     </div>
                                     <div class="mdl-cell mdl-cell--4-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <input class="mdl-textfield__input" type="text" id="subtotal" readonly>
-                                            <label for="subtotal">Subtotal</label>
-                                        </div>
-                                    </div>
-                                    <div class="mdl-cell mdl-cell--4-col">
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <input class="mdl-textfield__input" type="text" id="igv" readonly>
-                                            <label for="igv">IGV</label>
-                                        </div>
-                                    </div>
-                                    <div class="mdl-cell mdl-cell--4-col">
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <input class="mdl-textfield__input" type="text" id="total" readonly>
-                                            <label for="total">Total</label>
+                                            <input class="mdl-textfield__input" type="text" id="totalfinal" readonly>
+                                            <label for="totalfinal">Total</label>
                                         </div>
                                     </div>
                                 </div>
@@ -325,13 +313,13 @@
             const tablaBody = document.getElementById("tablaVentasBody");
             tablaBody.innerHTML = "";
 
-            let subtotal = 0;
+            let totalfinal = 0;
 
             productosSeleccionados.forEach((item, index) => {
                 const row = document.createElement("tr");
 
                 const total = item.cantidad * item.precio;
-                subtotal += total;
+                totalfinal += total;
 
                 row.innerHTML = `
                     <td class="mdl-data-table__cell--non-numeric">${item.nombre}</td>
@@ -350,12 +338,7 @@
                 tablaBody.appendChild(row);
             });
 
-            const igv = subtotal * 0.18;
-            const total = subtotal + igv;
-
-            document.getElementById("subtotal").value = `S/${subtotal.toFixed(2)}`;
-            document.getElementById("igv").value = `S/${igv.toFixed(2)}`;
-            document.getElementById("total").value = `S/${total.toFixed(2)}`;
+            document.getElementById("totalfinal").value = `S/${totalfinal.toFixed(2)}`;
         }
 
         document.getElementById("tablaVentasBody").addEventListener("click", function (event) {
@@ -380,9 +363,7 @@
         const tipo_pago = document.getElementById("tipo_pago").value;
         const region = document.getElementById("region").value;
         const metodo = document.getElementById("metodo").value;
-        const subtotal = document.getElementById("subtotal").value.replace("S/", "");
-        const igv = document.getElementById("igv").value.replace("S/", "");
-        const total = document.getElementById("total").value.replace("S/", "");
+        const total = document.getElementById("totalfinal").value.replace("S/", "");
 
         if (!cliente || !tipo_pago || !region || !metodo || productosSeleccionados.length === 0) {
             alert("Por favor complete todos los campos y agregue al menos un producto o promoción.");
@@ -396,8 +377,6 @@
         formData.append("tipo_pago", tipo_pago);
         formData.append("region", region);
         formData.append("metodo", metodo);
-        formData.append("subtotal", subtotal);
-        formData.append("igv", igv);
         formData.append("total", total);
         formData.append("detalles", JSON.stringify(productosSeleccionados));
 
