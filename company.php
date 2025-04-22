@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Company</title>
+	<title>Distritos y Regiones</title>
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/sweetalert2.css">
 	<link rel="stylesheet" href="css/material.min.css">
@@ -30,11 +30,11 @@
 		<?php include('menus/menu_navbar.php'); ?>
 		<section class="full-width header-well">
 			<div class="full-width header-well-icon">
-				<i class="zmdi zmdi-balance"></i>
+				<i class="zmdi zmdi-globe"></i>
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde aut nulla accusantium minus corporis accusamus fuga harum natus molestias necessitatibus.
+					Aquí puedes gestionar los distritos y las regiones donde se realizan ventas.
 				</p>
 			</div>
 		</section>
@@ -43,76 +43,37 @@
 			<div class="mdl-cell mdl-cell--12-col">
 				<div class="full-width panel mdl-shadow--2dp">
 					<div class="full-width panel-tittle bg-primary text-center tittles">
-						New company
+						Nueva región/distrito
 					</div>
 					<div class="full-width panel-content">
-						<form>
+						<form action="backend/distritos_regiones.php" method="POST">
+						<input type = "hidden" name = "accion" value = "crear">
 							<div class="mdl-grid">
 								<div class="mdl-cell mdl-cell--12-col">
-		                            <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; DATA COMPANY</legend><br>
+		                            <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos de la región o el distrito</legend><br>
 		                        </div>
 								<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="DNICompany">
-										<label class="mdl-textfield__label" for="DNICompany">DNI</label>
-										<span class="mdl-textfield__error">Invalid number</span>
-									</div>
-								</div>
-								<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameCompany">
-										<label class="mdl-textfield__label" for="NameCompany">Name</label>
+										<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-z0-9áéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameCompany" name="nombre">
+										<label class="mdl-textfield__label" for="NameCompany">Nombre de la región o el distrito</label>
 										<span class="mdl-textfield__error">Invalid name</span>
 									</div>
 								</div>
-								<div class="mdl-cell mdl-cell--12-col">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<input class="mdl-textfield__input" type="text" id="addressCompany">
-										<label class="mdl-textfield__label" for="addressCompany">Address</label>
-										<span class="mdl-textfield__error">Invalid address</span>
-									</div>
-								</div>
-								<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<input class="mdl-textfield__input" type="email" id="emailCompany">
-										<label class="mdl-textfield__label" for="emailCompany">E-mail</label>
-										<span class="mdl-textfield__error">Invalid E-mail</span>
-									</div>
-								</div>
-								<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<input class="mdl-textfield__input" type="text" id="urlCompany">
-										<label class="mdl-textfield__label" for="urlCompany">Web</label>
-										<span class="mdl-textfield__error">Invalid web</span>
-									</div>
-								</div>
 								<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneCompany">
-										<label class="mdl-textfield__label" for="phoneCompany">Phone</label>
-										<span class="mdl-textfield__error">Invalid phone number</span>
-									</div>
-								</div>
-								<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="faxCompany">
-										<label class="mdl-textfield__label" for="faxCompany">Fax</label>
-										<span class="mdl-textfield__error">Invalid fax number</span>
-									</div>
-								</div>
-								<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
-									<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-										<input class="mdl-textfield__input" type="text" id="coinCompany">
-										<label class="mdl-textfield__label" for="coinCompany">Coin</label>
-										<span class="mdl-textfield__error">Invalid coin</span>
-									</div>
-								</div>
+											<div class="mdl-textfield mdl-js-textfield">
+												<select class="mdl-textfield__input" name="estado">
+													<option value="" disabled="" selected="">Estado</option>
+													<option value="1">Activo</option>
+													<option value="0">Inactivo</option>
+												</select>
+											</div>
+										</div>
 							</div>
 							<p class="text-center">
 								<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored bg-primary" id="btn-addCompany">
 									<i class="zmdi zmdi-plus"></i>
 								</button>
-								<div class="mdl-tooltip" for="btn-addCompany">Add company</div>
+								<div class="mdl-tooltip" for="btn-addCompany">Agregar</div>
 							</p>
 						</form>
 					</div>

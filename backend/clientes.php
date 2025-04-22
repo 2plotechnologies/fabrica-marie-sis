@@ -9,6 +9,7 @@
         $direccion = $_POST['direccion'];
         $correo = $_POST['correo'];
         $telefono = $_POST['telefono'];
+        $region = $_POST['id_region'];
         $estado = $_POST['estado'];
 
          // Verificar si el cliente ya existe
@@ -22,8 +23,8 @@
              exit;
          }
         // Insertar cliente en la base de datos
-        $stmt = $pdo->prepare("INSERT INTO clientes (TipoDocumento, Numero_Documento, NombreCliente, Direccion, Telefono, Correo, Estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        if ($stmt->execute([$tipo, $documento, $nombre, $direccion, $telefono, $correo, $estado])) {
+        $stmt = $pdo->prepare("INSERT INTO clientes (TipoDocumento, Numero_Documento, NombreCliente, Direccion, Telefono, Correo, Id_Region, Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        if ($stmt->execute([$tipo, $documento, $nombre, $direccion, $telefono, $correo, $region, $estado])) {
             echo "<script>
                     alert('Cliente creado exitosamente.');
                     window.location.href = '../client.php';

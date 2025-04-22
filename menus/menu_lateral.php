@@ -42,10 +42,10 @@
 							<li class="full-width">
 								<a href="company.php" class="full-width">
 									<div class="navLateral-body-cl">
-										<i class="zmdi zmdi-balance"></i>
+										<i class="zmdi zmdi-globe"></i>
 									</div>
 									<div class="navLateral-body-cr">
-										COMPANY
+										Regiones y distritos
 									</div>
 								</a>
 							</li>

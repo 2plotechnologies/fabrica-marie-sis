@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Clients</title>
+	<title>Clientes</title>
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/sweetalert2.css">
 	<link rel="stylesheet" href="css/material.min.css">
@@ -34,7 +34,7 @@
 			</div>
 			<div class="full-width header-well-text">
 				<p class="text-condensedLight">
-					Aqui puedes administrar los clientes
+					Aquí puedes administrar los clientes
 				</p>
 			</div>
 		</section>
@@ -102,6 +102,25 @@
 												<span class="mdl-textfield__error">Invalid E-mail</span>
 											</div>
 									    </div>
+										<div class="mdl-cell mdl-cell--12-col">
+											<div class="mdl-textfield mdl-js-textfield">
+											<select id="region" name="id_region" class="mdl-textfield__input">
+													<option value="">-- Seleccionar Región--</option>
+													<?php
+														require 'backend/conexion.php';
+
+														// Buscar todos los roles en la base de datos
+														$stmt = $pdo->prepare("SELECT * FROM distritos_regiones WHERE Estado = 1"); // Asegúrate de que la tabla tenga estos campos
+														$stmt->execute();
+														
+														// Recorrer los resultados y agregarlos al select
+														while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['Region_Distrito']) . "</option>";
+														}
+													?>
+												</select>
+											</div>
+										</div>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield">
 												<select class="mdl-textfield__input" name="estado">
