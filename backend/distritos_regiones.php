@@ -20,3 +20,20 @@
             }
         }
     }
+
+    if(isset($_GET['accion'])){
+        if($_GET['accion'] == 'obtener'){
+            if (isset($_GET['id_region'])) {
+                $id_region = intval($_GET['id_region']);
+            
+                $stmt = $pdo->prepare("
+                    SELECT * from clientes
+                    WHERE Id_Region = ?
+                ");
+                $stmt->execute([$id_region]);
+            
+                $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo json_encode($clientes);
+            }
+        }
+    }

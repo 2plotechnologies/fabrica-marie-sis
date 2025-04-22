@@ -116,8 +116,18 @@
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                             <select class="mdl-textfield__input" id="region">
                                                 <option value="">-- Todas las regiones --</option>
-                                                <option value="1">Huancayo</option>
-                                                <option value="2">Selva Central</option>
+                                                <?php
+														require 'backend/conexion.php';
+
+														// Buscar todos los roles en la base de datos
+														$stmt = $pdo->prepare("SELECT * FROM distritos_regiones WHERE Estado = 1"); // Asegúrate de que la tabla tenga estos campos
+														$stmt->execute();
+														
+														// Recorrer los resultados y agregarlos al select
+														while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['Region_Distrito']) . "</option>";
+														}
+													?>
                                             </select>
                                         </div>
                                     </div>
