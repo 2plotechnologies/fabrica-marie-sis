@@ -73,6 +73,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
+        // NUEVO: Insertar cuotas si el tipo de pago es Crédito
+        if ($tipo_pago == 2 && isset($_POST['cuotas'])) {
+            $cuotas = json_decode($_POST['cuotas'], true);
+
+            if (is_array($cuotas)) {
+                $stmt_cuota = $pdo->prepare("INSERT INTO cobranzas (Id_Venta, Numero_Cuota, monto_cuota, fecha_pago) VALUES (?, ?, ?, ?)");
+
+                $numCuota = 1;
+                foreach ($cuotas as $cuota) {
+                    $monto = $cuota['monto'];
+                    $fechaLimite = $cuota['fecha_limite'];
+
+                    $stmt_cuota->execute([$id_venta, $numCuota, $monto, $fechaLimite]);
+                    $numCuota++;
+                }
+            }
+        }
+
     } else {
         echo "Error en el registro.";
     }

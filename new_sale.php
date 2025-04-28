@@ -191,6 +191,20 @@
         <button type="button" class="mdl-button close">Cerrar</button>
     </div>
 </dialog>
+<dialog id="creditoModal" class="mdl-dialog">
+  <h4 class="mdl-dialog__title">Configuración de Crédito</h4>
+  <div class="mdl-dialog__content">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input type="number" min="1" class="mdl-textfield__input" id="numCuotas" />
+      <label class="mdl-textfield__label" for="numCuotas">Número de cuotas</label>
+    </div>
+    <div id="cuotasContainer"></div> <!-- Aquí se generan los campos dinámicamente -->
+  </div>
+  <div class="mdl-dialog__actions">
+    <button type="button" class="mdl-button closeCredito">Cerrar</button>
+  </div>
+</dialog>
+
 <script>
     let productosSeleccionados = [];
 
@@ -199,6 +213,11 @@
         const modal = document.getElementById("productModal");
         const closeModalButton = modal.querySelector(".close");
         const productTableBody = document.getElementById("productTableBody");
+        const tipoPagoSelect = document.getElementById("tipo_pago");
+        const creditoModal = document.getElementById("creditoModal");
+        const closeCreditoBtn = creditoModal.querySelector(".closeCredito");
+        const numCuotasInput = document.getElementById("numCuotas");
+        const cuotasContainer = document.getElementById("cuotasContainer");
 
         // Función para cargar productos y promociones
         function loadProductsAndPromotions() {
@@ -352,6 +371,55 @@
             actualizarTablaPrincipal();
         }
 
+        // Mostrar el modal si se selecciona Crédito
+        tipoPagoSelect.addEventListener("change", function () {
+            if (this.value === "2") { // Si selecciona "Crédito"
+                creditoModal.showModal();
+            } else {
+                creditoModal.close();
+                cuotasContainer.innerHTML = ""; // Limpiar cuotas si cambia de opción
+            }
+        });
+
+        // Cerrar el modal
+        closeCreditoBtn.addEventListener("click", function () {
+            creditoModal.close();
+        });
+
+        // Generar campos automáticamente cuando escriba número de cuotas
+        numCuotasInput.addEventListener("input", function () {
+            const numCuotas = parseInt(this.value);
+            cuotasContainer.innerHTML = "";
+
+            if (numCuotas > 0) {
+                const totalVenta = parseFloat(document.getElementById("totalfinal").value.replace("S/", "")) || 0;
+                const montoPorCuota = totalVenta / numCuotas;
+
+                for (let i = 1; i <= numCuotas; i++) {
+                    const cuotaDiv = document.createElement("div");
+                    cuotaDiv.classList.add("mdl-grid");
+                    cuotaDiv.classList.add("cuota-item");
+                    cuotaDiv.innerHTML = `
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input type="text" class="mdl-textfield__input monto-cuota" value="${montoPorCuota.toFixed(2)}" readonly />
+                                <label class="mdl-textfield__label">Monto cuota ${i}</label>
+                            </div>
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input type="date" class="mdl-textfield__input fecha-cuota" required />
+                                <label class="mdl-textfield__label">Fecha límite ${i}</label>
+                            </div>
+                        </div>
+                    `;
+                    cuotasContainer.appendChild(cuotaDiv);
+                }
+
+                componentHandler.upgradeAllRegistered(); // Recargar estilos MDL
+            }
+        });
+
     });
 
     document.getElementById("btn-finalizarVenta").addEventListener("click", function () {
@@ -377,6 +445,30 @@
         formData.append("metodo", metodo);
         formData.append("total", total);
         formData.append("detalles", JSON.stringify(productosSeleccionados));
+
+        // NUEVO: agregar cuotas si es Crédito
+        if (tipo_pago == 2) {
+            const cuotas = [];
+            document.querySelectorAll(".cuota-item").forEach(item => {
+                const monto = item.querySelector(".monto-cuota").value;
+                const fechaLimite = item.querySelector(".fecha-cuota").value;
+
+                if (monto && fechaLimite) {
+                    cuotas.push({
+                        monto: parseFloat(monto),
+                        fecha_limite: fechaLimite
+                    });
+                }
+            });
+
+            if (cuotas.length == 0) {
+                alert("Debe ingresar al menos una cuota para el pago a crédito.");
+                return;
+            }
+
+            formData.append("cuotas", JSON.stringify(cuotas));
+        }
+
 
         fetch("backend/ventas/crear_venta.php", {
             method: "POST",
