@@ -32,6 +32,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Insertar datos en la base de datos
         try {
+            // Verificar si el producto ya existe
+            $stmt = $pdo->prepare("SELECT Id FROM productos WHERE Nombre = ?");
+            $stmt->execute([$nombre]);
+            if ($stmt->fetch()) {
+                echo "<script>
+                        alert('Ya existe un producto con ese Nombre!');
+                        window.location.href = '../products.php';
+                    </script>";
+                exit;
+            }
+
             // Insertar producto
             $sql = "INSERT INTO productos (Nombre, Fecha_Creacion, Estado, Imagen) 
                     VALUES (:nombre, :fecha, :estado, :imagen)";

@@ -7,6 +7,18 @@
         if($accion == 'crear'){
             $nombre = $_POST['nombre'];
             $descripcion = $_POST['descripcion'];
+
+             // Verificar si la presentación ya existe
+             $stmt = $pdo->prepare("SELECT Id FROM presentaciones WHERE Presentacion = ?");
+             $stmt->execute([$nombre]);
+             if ($stmt->fetch()) {
+                 echo "<script>
+                         alert('Ya existe una presentación con ese Nombre!');
+                         window.location.href = '../categories.php';
+                     </script>";
+                 exit;
+             }
+
             // Insertar usuario en la base de datos
             $stmt = $pdo->prepare("INSERT INTO presentaciones (Presentacion, Descripcion) VALUES (?, ?)");
             if ($stmt->execute([$nombre, $descripcion])) {
