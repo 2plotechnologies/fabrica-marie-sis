@@ -18,6 +18,106 @@
 	<script src="js/sweetalert2.min.js" ></script>
 	<script src="js/jquery.mCustomScrollbar.concat.min.js" ></script>
 	<script src="js/main.js" ></script>
+	<style>
+		.opciones-flotantes {
+			position: absolute;
+			background: white;
+			box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+			padding: 10px;
+			border-radius: 5px;
+			display: none;
+		}
+		.hidden {
+			display: none;
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			justify-content: center;
+			align-items: center;
+			overflow-y: auto;
+		}
+
+		.modal-content {
+			background: white;
+			padding: 20px;
+			width: 40%;
+			max-width: 600px;
+			margin: auto;
+			border-radius: 10px;
+			box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+			overflow-y: auto;
+		}
+
+		.close {
+			float: right;
+			font-size: 24px;
+			cursor: pointer;
+		}
+
+		h2, h3 {
+			text-align: center;
+			color: #333;
+		}
+
+		.input-field {
+			width: 90%;
+			padding: 10px;
+			margin: 5px 0;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+		}
+
+		.btn {
+			width: 100%;
+			padding: 10px;
+			margin-top: 10px;
+			border: none;
+			border-radius: 5px;
+			background: #007BFF;
+			color: white;
+			font-size: 16px;
+			cursor: pointer;
+		}
+
+		.btn:hover {
+			background: #0056b3;
+		}
+
+		.btn-secondary {
+			background: #28a745;
+		}
+
+		.btn-secondary:hover {
+			background: #218838;
+		}
+
+		.styled-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			overflow-y: auto;
+		}
+
+		.styled-table th, .styled-table td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.styled-table th {
+			background: #f4f4f4;
+		}
+
+	</style>
 </head>
 <body>
 	<!-- Notifications area -->
@@ -157,7 +257,17 @@
 											<span><?php echo $row['Razon_Social'] ?></span>
 											<span class="mdl-list__item-sub-title"><?php echo $row['RUC'] ?></span>
 										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
+										<button class="mdl-list__item-secondary-action" onclick="mostrarOpciones(this, <?php echo htmlspecialchars($row['Id']);?>)">
+											<i class="zmdi zmdi-more"></i>
+										</button>
+										<div id="opciones-flotantes<?php echo htmlspecialchars($row['Id']);?>" class = "hidden">
+											<button class="boton boton-verde" onclick="verDetalles(<?php echo htmlspecialchars($row['Id']);?>)">Ver detalles</button>
+											<?php if($row['Estado'] == 1){?>
+												<button class="boton boton-rojo" onclick="desactivarProveedor(<?php echo htmlspecialchars($row['Id']);?>)">Desactivar</button>
+											<?php }else{?>
+												<button class="boton boton-verde" onclick="activarProveedor(<?php echo htmlspecialchars($row['Id']);?>)">Activar</button>
+											<?php } ?>
+										</div>
 									</div>
 									<li class="full-width divider-menu-h"></li>
 									<?php } ?>
@@ -170,5 +280,172 @@
 			</div>
 		</div>
 	</section>
+	<div id="modalProveedor" class="modal hidden">
+		<div class="modal-content">
+			<span class="close" onclick="cerrarModal()">&times;</span>
+			<h4>Detalles del Proveedor</h4>
+
+			<form id="formProveedor">
+				<input type="hidden" id="proveedorId" name="proveedorId">
+				<input type="hidden" id="accion" name="accion" value="actualizar">
+				
+				<div class="mdl-grid">
+										<div class="mdl-cell mdl-cell--12-col">
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos Proveedor</legend><br>
+									    </div>
+									    <div class="mdl-cell mdl-cell--12-col">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="RUCProveedor" name="nruc">
+												<label class="mdl-textfield__label" for="RUCProveedor">RUC</label>
+												<span class="mdl-textfield__error">Invalid RUC</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="NameProveedor" name = "nombreProveedor">
+												<label class="mdl-textfield__label" for="NameProveedor">Razón Social</label>
+												<span class="mdl-textfield__error">Invalid name</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" id="addressProveedor" name = "direccionProveedor">
+												<label class="mdl-textfield__label" for="addressProveedor">Direccion</label>
+												<span class="mdl-textfield__error">Invalid address</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="tel" pattern="-?[0-9+()- ]*(\.[0-9]+)?" id="phoneProveedor" name = "telefonoProveedor">
+												<label class="mdl-textfield__label" for="phoneProveedor">Telefono</label>
+												<span class="mdl-textfield__error">Invalid phone number</span>
+											</div>
+									    </div>
+										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" id="webProveedor" name = "webProveedor">
+												<label class="mdl-textfield__label" for="webProveedor">WEB</label>
+												<span class="mdl-textfield__error">Invalid web</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="email" id="emailProveedor" name = "correoProveedor">
+												<label class="mdl-textfield__label" for="emailProveedor">E-mail</label>
+												<span class="mdl-textfield__error">Invalid E-mail</span>
+											</div>
+									    </div>
+										<label for="estado">Estado:</label>
+										<input type="text" id="estadoProveedor" name="estado" class="input-field" disabled>
+									</div>
+				<button type="button" class="btn" onclick="actualizarProveedor()">Actualizar</button>
+			</form>
+		</div>
+	</div>
+	<script>
+		function mostrarOpciones(boton, proveedorId) {
+				let menu = document.getElementById("opciones-flotantes" + proveedorId);
+
+				// Pasar el ID del proveedor a las funciones
+				menu.dataset.proveedorId = proveedorId;
+				
+				// Mostrar el menú flotante
+				menu.classList.remove("hidden");
+			}
+			// Función para desactivar proveedor
+			function desactivarProveedor(id) {
+				let proveedorId = document.getElementById("opciones-flotantes" + id).dataset.proveedorId;
+				let confirmar = confirm("¿Seguro que deseas desactivar el proveedor ID " + proveedorId + "?");
+				
+				if (confirmar) {
+					fetch("backend/proveedores.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id=${proveedorId}&accion=desactivar`
+					})
+					.then(response => response.json()) // Convertir la respuesta en JSON
+					.then(data => {
+						alert(data.mensaje); // Mostrar el mensaje recibido
+						document.getElementById("opciones-flotantes").classList.add("hidden");
+					})
+					.catch(error => console.error("Error:", error));
+				}
+			}
+
+			// Función para activar proveedor
+			function activarProveedor(id) {
+				let proveedorId = document.getElementById("opciones-flotantes" + id).dataset.proveedorId;
+				let confirmar = confirm("¿Seguro que deseas activar el proveedor ID " + proveedorId + "?");
+				
+				if (confirmar) {
+					fetch("backend/proveedores.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id=${proveedorId}&accion=activar`
+					})
+					.then(response => response.json()) // Convertir la respuesta en JSON
+					.then(data => {
+						alert(data.mensaje); // Mostrar el mensaje recibido
+						document.getElementById("opciones-flotantes").classList.add("hidden");
+					})
+					.catch(error => console.error("Error:", error));
+				}
+			}
+
+			function verDetalles(idproveedor) {
+				fetch("backend/proveedores.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id=${idproveedor}&accion=obtener`
+					})
+					.then(response => response.json())
+					.then(data => {
+						// Cargar datos generales del proveedor
+						document.getElementById("proveedorId").value = data.proveedor.Id;
+						document.getElementById("RUCProveedor").value = data.proveedor.RUC;
+						document.getElementById("NameProveedor").value = data.proveedor.Razon_Social;
+						document.getElementById("addressProveedor").value = data.proveedor.Direccion;
+						document.getElementById("phoneProveedor").value = data.proveedor.Telefono;
+						document.getElementById("emailProveedor").value = data.proveedor.Correo;
+						document.getElementById("webProveedor").value = data.proveedor.Web;
+						if(data.proveedor.Estado === 1){
+							document.getElementById("estadoProveedor").value = "Activo";
+						}else{
+							document.getElementById("estadoProveedor").value = "Inactivo";
+						}
+
+						// Mostrar el modal
+						document.getElementById("modalProveedor").style.display = "block";
+						document.getElementById("modalProveedor").classList.remove("hidden");
+					})
+					.catch(error => console.error("Error al obtener proveedor:", error));
+		}
+		function actualizarProveedor() {
+			let formData = new FormData(document.getElementById("formProveedor"));
+			//formData.append("accion", "actualizar");
+
+			fetch("backend/proveedores.php", {
+				method: "POST",
+				body: formData
+			})
+			.then(response => response.json())
+			.then(data => {
+				alert(data.mensaje);
+				cerrarModal();
+				location.reload(); // Recargar la página para ver los cambios
+			})
+			.catch(error => console.error("Error al actualizar:", error));
+		}
+
+		function cerrarModal() {
+			document.getElementById("modalproveedor").style.display = "none";
+		}
+	</script>
 </body>
 </html>

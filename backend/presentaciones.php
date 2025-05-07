@@ -69,6 +69,70 @@
             } catch (PDOException $e) {
                 echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
             }
+        }else if ($accion == 'obtener'){
+            $id = $_POST["id"] ?? "";
+            
+            if ($id > 0) {
+                 // Obtener datos del producto
+                 $stmt = $pdo->prepare("SELECT * FROM presentaciones WHERE Id = ?");
+                 $stmt->execute([$id]);
+                 $presentacion = $stmt->fetch(PDO::FETCH_ASSOC);
+                 echo json_encode(["presentacion" => $presentacion]);
+            }
+        }else if ($accion == 'eliminar'){
+            // $id = $_POST["id"] ?? "";
+     
+             $id = $_POST["id"] ?? "";
+
+             if ($id > 0) {
+                // Verificar si hay productos relacionados con esta presentación
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM producto_presentacion WHERE Id_Presentacion = ?");
+                $stmt->execute([$id]);
+                $relacionados = $stmt->fetchColumn();
+            
+                if ($relacionados > 0) {
+                    echo json_encode(["mensaje" => "No se puede eliminar la presentación porque está asociada a uno o más productos."]);
+                } else {
+                    // Ahora sí puedes eliminar la presentación
+                    $stmtDelete = $pdo->prepare("DELETE FROM presentaciones WHERE Id = ?");
+                    if ($stmtDelete->execute([$id])) {
+                        echo json_encode(["mensaje" => "Presentación eliminada correctamente."]);
+                    } else {
+                        echo json_encode(["mensaje" => "Error al eliminar la presentación."]);
+                    }
+                }
+            }
+            
+         }else if ($accion == 'actualizar'){
+            $id = $_POST["presentacionId"] ?? "";
+            $nombre = $_POST["nombrePresentacion"] ?? "";
+            $descripcion = $_POST["descripcionPresentacion"] ?? "";
+
+            // Verificar si la presentación ya existe
+            $stmt = $pdo->prepare("SELECT Id FROM presentaciones WHERE Presentacion = :presentacion AND Id != :id");
+            $stmt->execute([
+                ":presentacion" => $nombre,
+                ":id" => $id
+            ]);
+            if ($stmt->fetch()) {
+                echo json_encode(["mensaje" => "Ya existe una presentación con ese Nombre!"]);
+                exit;
+            }
+    
+            try {
+                $sql = "UPDATE presentaciones SET Presentacion = :nombre, Descripcion = :descripcion
+                        WHERE Id = :id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ":nombre" => $nombre,
+                    ":descripcion" => $descripcion,
+                    ":id" => $id
+                ]);
+    
+                echo json_encode(["mensaje" => "Presentación actualizada con éxito"]);
+            } catch (PDOException $e) {
+                echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+            }
         }
     }
 

@@ -44,6 +44,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             echo "Error en el registro.";
         }
+    }else if ($accion == 'desactivar'){
+        // $id = $_POST["id"] ?? "";
+ 
+         $id = $_POST["id"] ?? "";
+ 
+         try {
+             $sql = "UPDATE proveedores SET Estado = '0' WHERE Id = :id";
+             $stmt = $pdo->prepare($sql);
+             $stmt->execute([":id" => $id]);
+ 
+             echo json_encode(["mensaje" => "Proveedor desactivado con éxito"]);
+         } catch (PDOException $e) {
+             echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+         }
+     }else if ($accion == 'activar'){
+        // $id = $_POST["id"] ?? "";
+ 
+         $id = $_POST["id"] ?? "";
+ 
+         try {
+             $sql = "UPDATE proveedores SET Estado = '1' WHERE Id = :id";
+             $stmt = $pdo->prepare($sql);
+             $stmt->execute([":id" => $id]);
+ 
+             echo json_encode(["mensaje" => "Proveedor activado con éxito"]);
+         } catch (PDOException $e) {
+             echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+         }
+    }else if ($accion == 'actualizar'){
+        $id = $_POST["proveedorId"] ?? "";
+        $doc = $_POST["nruc"] ?? "";
+        $nombre = $_POST["nombreProveedor"] ?? "";
+        $direccion = $_POST["direccionProveedor"] ?? "";
+        $telefono = $_POST["telefonoProveedor"] ?? "";
+        $correo = $_POST["correoProveedor"] ?? "";
+        $web = $_POST["webProveedor"] ?? "";
+
+        try {
+            $sql = "UPDATE proveedores SET RUC = :doc, Razon_Social = :nombre, Direccion = :direccion, Telefono = :telefono, Correo = :correo, Web = :web
+                    WHERE Id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ":doc" => $doc,
+                ":nombre" => $nombre,
+                ":direccion" => $direccion,
+                ":telefono" => $telefono,
+                ":correo" => $correo,
+                ":web" => $web,
+                ":id" => $id
+            ]);
+
+            echo json_encode(["mensaje" => "Proveedor actualizado con éxito"]);
+        } catch (PDOException $e) {
+            echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+        }
+    }else if ($accion == 'obtener'){
+        $id = $_POST["id"] ?? "";
+        
+        if ($id > 0) {
+             // Obtener datos del producto
+             $stmt = $pdo->prepare("SELECT * FROM proveedores WHERE Id = ?");
+             $stmt->execute([$id]);
+             $proveedor = $stmt->fetch(PDO::FETCH_ASSOC);
+             echo json_encode(["proveedor" => $proveedor]);
+        }
     }
 }
 ?>
