@@ -380,7 +380,8 @@
 					.then(response => response.json()) // Convertir la respuesta en JSON
 					.then(data => {
 						alert(data.mensaje); // Mostrar el mensaje recibido
-						document.getElementById("opciones-flotantes").classList.add("hidden");
+						//document.getElementById("opciones-flotantes").classList.add("hidden");
+						window.location.reload();
 					})
 					.catch(error => console.error("Error:", error));
 				}
@@ -402,7 +403,8 @@
 					.then(response => response.json()) // Convertir la respuesta en JSON
 					.then(data => {
 						alert(data.mensaje); // Mostrar el mensaje recibido
-						document.getElementById("opciones-flotantes").classList.add("hidden");
+						//document.getElementById("opciones-flotantes").classList.add("hidden");
+						window.location.reload();
 					})
 					.catch(error => console.error("Error:", error));
 				}

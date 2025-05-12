@@ -62,7 +62,7 @@
 								require 'backend/conexion.php';
 
 								// Buscar todos los usuarios en la base de datos
-								$stmt = $pdo->prepare("SELECT v.Fecha, c.NombreCliente AS Cliente, v.Tipo_Pago, v.Total
+								$stmt = $pdo->prepare("SELECT v.Id, v.Fecha, c.NombreCliente AS Cliente, v.Tipo_Pago, v.Total
 									FROM ventas v
 									JOIN clientes c ON v.Id_Cliente = c.Id
 									ORDER BY v.Fecha DESC"); // Asegúrate de que la tabla tenga estos campos
@@ -76,7 +76,7 @@
 								<td><?php echo $row['Cliente'] ?></td>
 								<td><?php if($row['Tipo_Pago'] == '1'){echo "Efectivo";}else{echo "Tarjeta";}  ?></td>
 								<td>S/<?php echo $row['Total'] ?></td>
-								<td><button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"><i class="zmdi zmdi-more"></i></button></td>
+								<td><button onclick="eliminarVenta(<?php echo $row['Id'] ?>)" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"><i class="zmdi zmdi-delete"></i></button></td>
 							</tr>
 							<?php } ?>
 						</tbody>
@@ -85,5 +85,27 @@
 			</div>
 		</div>
 	</section>
+
+	<script>
+		function eliminarVenta(id) {
+					let confirmar = confirm("¿Seguro que deseas eliminar la venta ID " + id + "?");
+					
+					if (confirmar) {
+						fetch("backend/ventas/acciones.php", {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/x-www-form-urlencoded",
+							},
+							body: `id=${id}&accion=eliminar`
+						})
+						.then(response => response.json()) // Convertir la respuesta en JSON
+						.then(data => {
+							alert(data.mensaje); // Mostrar el mensaje recibido
+							window.location.reload();
+						})
+						.catch(error => console.error("Error:", error));
+					}
+				}
+	</script>
 </body>
 </html>

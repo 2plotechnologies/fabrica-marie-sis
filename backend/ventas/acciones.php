@@ -1,0 +1,25 @@
+<?php
+session_start();
+require '../conexion.php'; // Importar la conexión
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+     $accion = $_POST['accion'];
+
+    if($accion == 'eliminar'){
+        $id = $_POST["id"] ?? "";
+ 
+         try {
+             $sql = "DELETE FROM detalle_venta WHERE id_Venta = :id";
+             $stmt = $pdo->prepare($sql);
+             if($stmt->execute([":id" => $id])){
+                $sql2 = "DELETE FROM ventas WHERE Id = :id";
+                $stmt2 = $pdo->prepare($sql2);
+                $stmt2->execute([":id" => $id]);
+                echo json_encode(["mensaje" => "Venta eliminada con éxito"]);
+             }
+ 
+         } catch (PDOException $e) {
+             echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+         }
+    }
+}
