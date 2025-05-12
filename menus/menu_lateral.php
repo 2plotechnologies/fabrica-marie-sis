@@ -11,7 +11,7 @@
 				<figcaption>
 					<span>
 						<?php echo $_SESSION["usuario"]; ?><br>
-						<small>Admin</small>
+						<small><?php if($_SESSION["rol"] == '1'){echo "Admin";}else{echo "Vendedor";}  ?></small>
 					</span>
 				</figcaption>
 			</figure>
@@ -27,6 +27,7 @@
 							</div>
 						</a>
 					</li>
+					<?php if($_SESSION["rol"] == 1){?>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
@@ -125,6 +126,7 @@
 							</li>
 						</ul>
 					</li>
+					<?php } ?>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="products.php" class="full-width">
@@ -159,6 +161,7 @@
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
+					<?php if($_SESSION["rol"] == 1){?>
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
 							<div class="navLateral-body-cl">
@@ -192,6 +195,7 @@
 							</li>
 						</ul>
 					</li>
+					<?php } ?>
 				</ul>
 			</nav>
 		</div>
