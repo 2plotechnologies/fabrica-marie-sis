@@ -1,5 +1,12 @@
 <?php
+session_start();
 require 'conexion.php'; // Importamos la conexión a la base de datos
+
+if (!isset($_SESSION['id_Usuario'])) {
+    // Si no hay sesión activa, redirige al login
+    echo "ERROR: Usuario no identificado";
+    die();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener datos del formulario

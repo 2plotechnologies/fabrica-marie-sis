@@ -1,5 +1,12 @@
 <?php
+    session_start();
     require 'conexion.php';
+
+    if (!isset($_SESSION['id_Usuario'])) {
+        // Si no hay sesión activa, redirige al login
+        echo "ERROR: Usuario no identificado";
+        die();
+    }
 
     // Obtener productos con presentaciones y precios
     $queryProductos = "

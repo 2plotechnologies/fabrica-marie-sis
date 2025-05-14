@@ -1,5 +1,11 @@
 <?php session_start();
-require 'backend/conexion.php'; ?>
+require 'backend/conexion.php';
+if (!isset($_SESSION['id_Usuario'])) {
+    // Si no hay sesión activa, redirige al login
+    header("Location: index.html");
+    exit(); // Importante: detener el script después de redirigir
+}
+?>
 
 <!DOCTYPE html>
 <html lang="es">

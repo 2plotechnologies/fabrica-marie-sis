@@ -1,9 +1,16 @@
 <?php
+session_start();
 require 'conexion.php';
 require '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+if (!isset($_SESSION['id_Usuario'])) {
+    // Si no hay sesión activa, redirige al login
+    echo "ERROR: Usuario no identificado";
+    die();
+}
 
 // Obtener filtros desde GET
 $fecha_inicio = $_GET['fecha_inicio'];

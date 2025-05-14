@@ -1,6 +1,13 @@
 <?php
+session_start();
 require 'conexion.php';
 require_once '../tcpdf/tcpdf.php';
+
+if (!isset($_SESSION['id_Usuario'])) {
+    // Si no hay sesión activa, redirige al login
+    echo "ERROR: Usuario no identificado";
+    die();
+}
 
 // Obtener filtros desde GET
 $fecha_inicio = $_GET['fecha_inicio'];

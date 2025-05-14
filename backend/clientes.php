@@ -1,5 +1,13 @@
 <?php 
+    session_start();
     require 'conexion.php'; // Importar la conexión
+
+    if (!isset($_SESSION['id_Usuario'])) {
+        // Si no hay sesión activa, redirige al login
+        echo "ERROR: Usuario no identificado";
+        die();
+    }
+    
     $accion = $_POST['accion'];
 
     if($accion == 'crear'){
