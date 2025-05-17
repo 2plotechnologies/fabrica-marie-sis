@@ -69,22 +69,29 @@ if (!isset($_SESSION['id_Usuario'])) {
                                             <label for="fecha_fin">Fecha fin</label>
                                         </div>
                                     </div>
-                                    <div class="mdl-cell mdl-cell--6-col">
+                                     <div class="mdl-cell mdl-cell--6-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <select class="mdl-textfield__input" id="cliente">
-                                                <option value="todos">-- Todos los clientes --</option>
+                                            <select class="mdl-textfield__input" id="region">
+                                                <option value="">-- Todas las regiones --</option>
                                                 <?php
 														require 'backend/conexion.php';
 
-														// Buscar todos los usuarios vendedores en la base de datos
-														$stmt = $pdo->prepare("SELECT * FROM clientes WHERE Estado = 1"); // Asegúrate de que la tabla tenga estos campos
+														// Buscar todos los roles en la base de datos
+														$stmt = $pdo->prepare("SELECT * FROM distritos_regiones WHERE Estado = 1"); // Asegúrate de que la tabla tenga estos campos
 														$stmt->execute();
 														
 														// Recorrer los resultados y agregarlos al select
 														while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['NombreCliente']) . " - " . htmlspecialchars($row['Numero_Documento']) . "</option>";
+															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['Region_Distrito']) . "</option>";
 														}
 													?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mdl-cell mdl-cell--6-col">
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                            <select class="mdl-textfield__input" id="cliente">
+                                                <option value="todos">-- Todos los clientes --</option>
                                             </select>
                                         </div>
                                     </div>
@@ -115,25 +122,6 @@ if (!isset($_SESSION['id_Usuario'])) {
                                                 <option value="">-- Todos los tipos de Pago --</option>
                                                 <option value="1">Contado</option>
                                                 <option value="2">Credito</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mdl-cell mdl-cell--6-col">
-                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                            <select class="mdl-textfield__input" id="region">
-                                                <option value="">-- Todas las regiones --</option>
-                                                <?php
-														require 'backend/conexion.php';
-
-														// Buscar todos los roles en la base de datos
-														$stmt = $pdo->prepare("SELECT * FROM distritos_regiones WHERE Estado = 1"); // Asegúrate de que la tabla tenga estos campos
-														$stmt->execute();
-														
-														// Recorrer los resultados y agregarlos al select
-														while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['Region_Distrito']) . "</option>";
-														}
-													?>
                                             </select>
                                         </div>
                                     </div>
@@ -269,6 +257,28 @@ if (!isset($_SESSION['id_Usuario'])) {
         const query = $.param(filtros);
         window.open('backend/exportar_excel.php?' + query, '_blank');
     });
+
+    document.getElementById("region").addEventListener("change", function() {
+            let regionId = this.value;
+            let clienteSelect = document.getElementById("cliente");
+
+            // Limpiar opciones anteriores
+            clienteSelect.innerHTML = '<option value="todos">-- Todos los clientes --</option>';
+
+            if (regionId) {
+                fetch('backend/distritos_regiones.php?id_region=' + regionId + '&accion=obtener')
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(cliente => {
+                            let option = document.createElement("option");
+                            option.value = cliente.Id;
+                            option.textContent = cliente.NombreCliente + " - " + cliente.Numero_Documento;
+                            clienteSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
 
 </script>
 
