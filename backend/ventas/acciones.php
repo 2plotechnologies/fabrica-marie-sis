@@ -18,10 +18,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              $sql = "DELETE FROM detalle_venta WHERE id_Venta = :id";
              $stmt = $pdo->prepare($sql);
              if($stmt->execute([":id" => $id])){
-                $sql2 = "DELETE FROM ventas WHERE Id = :id";
+
+                $sql2 = "DELETE FROM cobranzas WHERE Id_Venta = :id";
                 $stmt2 = $pdo->prepare($sql2);
-                $stmt2->execute([":id" => $id]);
-                echo json_encode(["mensaje" => "Venta eliminada con éxito"]);
+                
+                if($stmt2->execute([":id" => $id])){
+                    $sql3 = "DELETE FROM ventas WHERE Id = :id";
+                    $stmt3 = $pdo->prepare($sql3);
+                    $stmt3->execute([":id" => $id]);
+                    echo json_encode(["mensaje" => "Venta eliminada con éxito"]);
+                }
              }
  
          } catch (PDOException $e) {
