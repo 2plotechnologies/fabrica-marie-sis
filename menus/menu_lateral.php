@@ -149,6 +149,16 @@
 							</div>
 						</a>
 					</li>
+					<li class="full-width">
+						<a href="cobranzas.php" class="full-width">
+							<div class="navLateral-body-cl">
+								<i class="zmdi zmdi-money"></i>
+							</div>
+							<div class="navLateral-body-cr">
+								Cobranzas
+							</div>
+						</a>
+					</li>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="inventory.php" class="full-width">
