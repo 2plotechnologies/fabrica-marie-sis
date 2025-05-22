@@ -114,7 +114,7 @@ if (!isset($_SESSION['id_Usuario'])) {
                                             <select class="mdl-textfield__input" id="tipo_pago">
                                                 <option value="">-- Seleccionar Tipo Pago --</option>
                                                 <option value="1">Contado</option>
-                                                <option value="2">Credito</option>
+                                                <option value="2">Crédito</option>
                                             </select>
                                         </div>
                                     </div>

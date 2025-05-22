@@ -80,7 +80,7 @@ if (!isset($_SESSION['id_Usuario'])) {
 							<tr>
 								<td class="mdl-data-table__cell--non-numeric"><?php echo $row['Fecha'] ?></td>
 								<td><?php echo $row['Cliente'] ?></td>
-								<td><?php if($row['Tipo_Pago'] == '1'){echo "Efectivo";}else{echo "Tarjeta";}  ?></td>
+								<td><?php if($row['Tipo_Pago'] == '1'){echo "Contado";}else{echo "Crédito";}  ?></td>
 								<td>S/<?php echo $row['Total'] ?></td>
 								<td><button onclick="eliminarVenta(<?php echo $row['Id'] ?>)" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"><i class="zmdi zmdi-delete"></i></button></td>
 							</tr>

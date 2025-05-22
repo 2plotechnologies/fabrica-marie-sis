@@ -154,59 +154,54 @@ if (!isset($_SESSION['id_Usuario'])) {
 			<?php } ?>
 		</section>
 		<section class="full-width" style="margin: 30px 0;">
-			<h3 class="text-center tittles">RESPONSIVE TIMELINE</h3>
-			<!-- TimeLine -->
+			<h3 class="text-center tittles">Notificaciones de Pagos Pendientes</h3>
 			<div id="timeline-c" class="timeline-c">
-				<div class="timeline-c-box">
-	                <div class="timeline-c-box-icon bg-info">
-	                    <i class="zmdi zmdi-twitter"></i>
-	                </div>
-	                <div class="timeline-c-box-content">
-	                    <h4 class="text-center text-condensedLight">Tittle timeline</h4>
-	                    <p class="text-center">
-	                    	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta nobis rerum iure nostrum dolor. Quo totam possimus, ex, sapiente rerum vel maxime fugiat, ipsam blanditiis veniam, suscipit labore excepturi veritatis.
-	                    </p>
-	                    <span class="timeline-date"><i class="zmdi zmdi-calendar-note zmdi-hc-fw"></i>05-04-2016</span>
-	                </div>
-	            </div>
-				<div class="timeline-c-box">
-	                <div class="timeline-c-box-icon bg-success">
-	                    <i class="zmdi zmdi-whatsapp"></i>
-	                </div>
-	                <div class="timeline-c-box-content">
-	                    <h4 class="text-center text-condensedLight">Tittle timeline</h4>
-	                    <p class="text-center">
-	                    	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta nobis rerum iure nostrum dolor. Quo totam possimus, ex, sapiente rerum vel maxime fugiat, ipsam blanditiis veniam, suscipit labore excepturi veritatis.
-	                    </p>
-	                    <span class="timeline-date"><i class="zmdi zmdi-calendar-note zmdi-hc-fw"></i>06-04-2016</span>
-	                </div>
-	            </div>
-	            <div class="timeline-c-box">
-	                <div class="timeline-c-box-icon bg-primary">
-	                    <i class="zmdi zmdi-facebook"></i>
-	                </div>
-	                <div class="timeline-c-box-content">
-	                    <h4 class="text-center text-condensedLight">Tittle timeline</h4>
-	                    <p class="text-center">
-	                    	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta nobis rerum iure nostrum dolor. Quo totam possimus, ex, sapiente rerum vel maxime fugiat, ipsam blanditiis veniam, suscipit labore excepturi veritatis.
-	                    </p>
-	                    <span class="timeline-date"><i class="zmdi zmdi-calendar-note zmdi-hc-fw"></i>07-04-2016</span>
-	                </div>
-	            </div>
-	            <div class="timeline-c-box">
-	                <div class="timeline-c-box-icon bg-danger">
-	                    <i class="zmdi zmdi-youtube"></i>
-	                </div>
-	                <div class="timeline-c-box-content">
-	                    <h4 class="text-center text-condensedLight">Tittle timeline</h4>
-	                    <p class="text-center">
-	                    	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta nobis rerum iure nostrum dolor. Quo totam possimus, ex, sapiente rerum vel maxime fugiat, ipsam blanditiis veniam, suscipit labore excepturi veritatis.
-	                    </p>
-	                    <span class="timeline-date"><i class="zmdi zmdi-calendar-note zmdi-hc-fw"></i>08-04-2016</span>
-	                </div>
-	            </div>
+				<?php
+				require 'backend/conexion.php';
+				$hoy = new DateTime();
+
+				$stmt = $pdo->prepare("
+					SELECT co.*, v.Fecha AS fecha_venta, c.NombreCliente 
+					FROM cobranzas co
+					INNER JOIN ventas v ON co.Id_Venta = v.Id
+					INNER JOIN clientes c ON v.Id_Cliente = c.Id
+					WHERE co.pagado = 0
+					ORDER BY co.fecha_pago ASC
+				");
+				$stmt->execute();
+
+				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+					$fecha_pago = new DateTime($row['fecha_pago']);
+					$dias_restantes = (int)$hoy->diff($fecha_pago)->format('%r%a');
+					
+					if ($dias_restantes <= 5) {
+						$estado = $dias_restantes < 0 ? 'Pago vencido' : 'Pago pendiente';
+						$color = $dias_restantes < 0 ? 'bg-danger' : 'bg-warning';
+						$icono = $dias_restantes < 0 ? 'zmdi-alert-circle' : 'zmdi-time-restore';
+
+						echo '
+						<div class="timeline-c-box">
+							<div class="timeline-c-box-icon '.$color.'">
+								<i class="zmdi '.$icono.'"></i>
+							</div>
+							<div class="timeline-c-box-content">
+								<h4 class="text-center text-condensedLight">'.$estado.'</h4>
+								<p class="text-center">
+									Cliente: <strong>'.$row['NombreCliente'].'</strong><br>
+									N° de cuota: <strong>'.$row['Numero_Cuota'].'</strong><br>
+									Monto: <strong>S/'.$row['monto_cuota'].'</strong>
+								</p>
+								<span class="timeline-date">
+									<i class="zmdi zmdi-calendar-note zmdi-hc-fw"></i> '.$fecha_pago->format('d-m-Y').'
+								</span>
+							</div>
+						</div>';
+					}
+				}
+				?>
 			</div>
 		</section>
+
 	</section>
 </body>
 </html>
