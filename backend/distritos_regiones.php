@@ -26,6 +26,25 @@
                 echo "Error en la creación.";
             }
         }
+
+         if ($accion === 'editar') {
+            $id = $_POST['id'];
+            $nombre = $_POST['nombre'];
+
+            $stmt = $pdo->prepare("UPDATE distritos_regiones SET Region_Distrito = ? WHERE Id = ?");
+            $stmt->execute([$nombre, $id]);
+
+            echo json_encode(["mensaje" => "Registro actualizado correctamente."]);
+        }
+
+        if ($accion === 'desactivar') {
+            $id = $_POST['id'];
+            $stmt = $pdo->prepare("UPDATE distritos_regiones SET Estado = 0 WHERE Id = ?");
+            $stmt->execute([$id]);
+            echo json_encode(["mensaje" => "Registro desactivado correctamente."]);
+        }
+        exit;
+
     }
 
     if(isset($_GET['accion'])){
@@ -42,5 +61,11 @@
                 $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo json_encode($clientes);
             }
+        }else if ($_GET['accion'] === 'obtener_region') {
+            $id = $_GET['id'];
+            $stmt = $pdo->prepare("SELECT * FROM distritos_regiones WHERE Id = ?");
+            $stmt->execute([$id]);
+            echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+            exit;
         }
     }
