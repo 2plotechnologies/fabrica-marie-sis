@@ -23,7 +23,7 @@
 				$fecha = (new DateTime($row['fecha_pago']))->format('d-m-Y');
 				$monto = number_format($row['monto_cuota'], 2);
 				echo '
-				<a href="../cobranzas.php" class="Notification">
+				<a href="cobranzas.php" class="Notification">
 					<div class="Notification-icon">
 						<i class="zmdi zmdi-alert-circle bg-danger"></i>
 					</div>
