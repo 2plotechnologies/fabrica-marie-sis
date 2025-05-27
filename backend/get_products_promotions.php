@@ -36,7 +36,7 @@
             'Promoción' AS tipo
         FROM promociones promo
         INNER JOIN productos p ON promo.Id_Producto = p.Id
-        INNER JOIN presentaciones pr ON promo.Id_Presentacion = pr.Id
+        INNER JOIN presentaciones pr ON promo.Id_Presentacion = pr.Id WHERE promo.Estado = 1
     ";
     $stmtPromociones = $pdo->query($queryPromociones);
     $promociones = $stmtPromociones->fetchAll(PDO::FETCH_ASSOC);

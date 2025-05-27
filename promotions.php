@@ -24,6 +24,106 @@ if (!isset($_SESSION['id_Usuario'])) {
 	<script src="js/sweetalert2.min.js" ></script>
 	<script src="js/jquery.mCustomScrollbar.concat.min.js" ></script>
 	<script src="js/main.js" ></script>
+	<style>
+		.opciones-flotantes {
+			position: absolute;
+			background: white;
+			box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+			padding: 10px;
+			border-radius: 5px;
+			display: none;
+		}
+		.hidden {
+			display: none;
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			justify-content: center;
+			align-items: center;
+			overflow-y: auto;
+		}
+
+		.modal-content {
+			background: white;
+			padding: 20px;
+			width: 40%;
+			max-width: 600px;
+			margin: auto;
+			border-radius: 10px;
+			box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+			overflow-y: auto;
+		}
+
+		.close {
+			float: right;
+			font-size: 24px;
+			cursor: pointer;
+		}
+
+		h2, h3 {
+			text-align: center;
+			color: #333;
+		}
+
+		.input-field {
+			width: 90%;
+			padding: 10px;
+			margin: 5px 0;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+		}
+
+		.btn {
+			width: 100%;
+			padding: 10px;
+			margin-top: 10px;
+			border: none;
+			border-radius: 5px;
+			background: #007BFF;
+			color: white;
+			font-size: 16px;
+			cursor: pointer;
+		}
+
+		.btn:hover {
+			background: #0056b3;
+		}
+
+		.btn-secondary {
+			background: #28a745;
+		}
+
+		.btn-secondary:hover {
+			background: #218838;
+		}
+
+		.styled-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 10px;
+			overflow-y: auto;
+		}
+
+		.styled-table th, .styled-table td {
+			padding: 10px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.styled-table th {
+			background: #f4f4f4;
+		}
+
+	</style>
 </head>
 <body>
 	<!-- Notifications area -->
@@ -61,7 +161,7 @@ if (!isset($_SESSION['id_Usuario'])) {
 									<input type = "hidden" name = "accion" value = "crear">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos promoción</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos Promoción</legend><br>
 									    </div>
 									    <div class="mdl-cell mdl-cell--12-col">
 											<div class="mdl-textfield mdl-js-textfield">
@@ -159,7 +259,17 @@ if (!isset($_SESSION['id_Usuario'])) {
 											<span><?php echo $row['Descripcion'] ?></span>
 											<span class="mdl-list__item-sub-title">S/ <?php echo $row['Nuevo_Precio'] ?></span>
 										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
+										<button class="mdl-list__item-secondary-action" onclick="mostrarOpciones(this, <?php echo htmlspecialchars($row['Id']);?>)">
+											<i class="zmdi zmdi-more"></i>
+										</button>
+										<div id="opciones-flotantes<?php echo htmlspecialchars($row['Id']);?>" class = "hidden">
+											<button class="boton boton-verde" onclick="verDetalles(<?php echo htmlspecialchars($row['Id']);?>)">Ver detalles</button>
+											<?php if($row['Estado'] == 1){?>
+												<button class="boton boton-rojo" onclick="desactivarPromocion(<?php echo htmlspecialchars($row['Id']);?>)">Desactivar</button>
+											<?php }else{?>
+												<button class="boton boton-verde" onclick="activarPromocion(<?php echo htmlspecialchars($row['Id']);?>)">Activar</button>
+											<?php } ?>
+										</div>
 									</div>
 									<li class="full-width divider-menu-h"></li>
 									<?php } ?>
@@ -171,6 +281,47 @@ if (!isset($_SESSION['id_Usuario'])) {
 			</div>
 		</div>
 	</section>
+	<div id="modalPromocion" class="modal hidden">
+		<div class="modal-content">
+			<span class="close" onclick="cerrarModal()">&times;</span>
+			<h4>Detalles del Promoción</h4>
+
+			<form id="formPromocion">
+				<input type="hidden" id="promocionId" name="promocionId">
+				<input type="hidden" id="accion" name="accion" value="actualizar">
+				
+				<div class="mdl-grid">
+										<div class="mdl-cell mdl-cell--12-col">
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos Promoción</legend><br>
+									    </div>
+									    <div class="mdl-cell mdl-cell--12-col">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="number" pattern="-?[0-9]*(\.[0-9]+)?" id="cantidadPromocion" name="cantidadPromocion">
+												<label class="mdl-textfield__label" for="cantidadPromocion">Cantidad</label>
+												<span class="mdl-textfield__error">Invalid number</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" pattern="-?[A-Za-záéíóúÁÉÍÓÚ ]*(\.[0-9]+)?" id="descripcionPromocion" name = "descripcionPromocion">
+												<label class="mdl-textfield__label" for="descipcionPromocion">Descripción</label>
+												<span class="mdl-textfield__error">Invalid description</span>
+											</div>
+									    </div>
+									    <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="precioPromocion" name="preciopromo">
+												<label class="mdl-textfield__label" for="precioPromocion">Nuevo Precio (S/)</label>
+												<span class="mdl-textfield__error">Invalid mount</span>
+											</div>
+										</div>
+										<label for="estado">Estado:</label>
+										<input type="text" id="estadoPromocion" name="estado" class="input-field" disabled>
+									</div>
+				<button type="button" class="btn" onclick="actualizarPromocion()">Actualizar</button>
+			</form>
+		</div>
+	</div>
     <script>
         document.getElementById("producto").addEventListener("change", function() {
             let productoId = this.value;
@@ -193,6 +344,109 @@ if (!isset($_SESSION['id_Usuario'])) {
                     .catch(error => console.error('Error:', error));
             }
         });
+
+		function mostrarOpciones(boton, promocionId) {
+				let menu = document.getElementById("opciones-flotantes" + promocionId);
+
+				// Pasar el ID del promocion a las funciones
+				menu.dataset.promocionId = promocionId;
+				
+				// Mostrar el menú flotante
+				menu.classList.remove("hidden");
+			}
+			// Función para desactivar promocion
+			function desactivarPromocion(id) {
+				let promocionId = document.getElementById("opciones-flotantes" + id).dataset.promocionId;
+				let confirmar = confirm("¿Seguro que deseas desactivar el promocion ID " + promocionId + "?");
+				
+				if (confirmar) {
+					fetch("backend/promociones.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id=${promocionId}&accion=desactivar`
+					})
+					.then(response => response.json()) // Convertir la respuesta en JSON
+					.then(data => {
+						alert(data.mensaje); // Mostrar el mensaje recibido
+						//document.getElementById("opciones-flotantes").classList.add("hidden");
+						window.location.reload();
+					})
+					.catch(error => console.error("Error:", error));
+				}
+			}
+
+			// Función para activar promocion
+			function activarPromocion(id) {
+				let promocionId = document.getElementById("opciones-flotantes" + id).dataset.promocionId;
+				let confirmar = confirm("¿Seguro que deseas activar el promocion ID " + promocionId + "?");
+				
+				if (confirmar) {
+					fetch("backend/promociones.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id=${promocionId}&accion=activar`
+					})
+					.then(response => response.json()) // Convertir la respuesta en JSON
+					.then(data => {
+						alert(data.mensaje); // Mostrar el mensaje recibido
+						//document.getElementById("opciones-flotantes").classList.add("hidden");
+						window.location.reload();
+					})
+					.catch(error => console.error("Error:", error));
+				}
+			}
+
+			function verDetalles(idpromocion) {
+				fetch("backend/promociones.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id=${idpromocion}&accion=obtener`
+					})
+					.then(response => response.json())
+					.then(data => {
+						// Cargar datos generales del promocion
+						document.getElementById("promocionId").value = data.promocion.Id;
+						document.getElementById("descripcionPromocion").value = data.promocion.Descripcion;
+						document.getElementById("cantidadPromocion").value = data.promocion.Cantidad;
+						document.getElementById("precioPromocion").value = data.promocion.Nuevo_Precio;
+						if(data.promocion.Estado === 1){
+							document.getElementById("estadoPromocion").value = "Activo";
+						}else{
+							document.getElementById("estadoPromocion").value = "Inactivo";
+						}
+
+						// Mostrar el modal
+						document.getElementById("modalPromocion").style.display = "block";
+						document.getElementById("modalPromocion").classList.remove("hidden");
+					})
+					.catch(error => console.error("Error al obtener promocion:", error));
+		}
+		function actualizarPromocion() {
+			let formData = new FormData(document.getElementById("formPromocion"));
+			//formData.append("accion", "actualizar");
+
+			fetch("backend/promociones.php", {
+				method: "POST",
+				body: formData
+			})
+			.then(response => response.json())
+			.then(data => {
+				alert(data.mensaje);
+				cerrarModal();
+				location.reload(); // Recargar la página para ver los cambios
+			})
+			.catch(error => console.error("Error al actualizar:", error));
+		}
+
+		function cerrarModal() {
+			document.getElementById("modalPromocion").style.display = "none";
+		}
     </script>
 </body>
 </html>
