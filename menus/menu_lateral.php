@@ -160,6 +160,7 @@
 						</a>
 					</li>
 					<li class="full-width divider-menu-h"></li>
+					<!--
 					<li class="full-width">
 						<a href="inventory.php" class="full-width">
 							<div class="navLateral-body-cl">
@@ -170,6 +171,7 @@
 							</div>
 						</a>
 					</li>
+					-->
 					<li class="full-width divider-menu-h"></li>
 					<?php if($_SESSION["rol"] == 1){?>
 					<li class="full-width">
@@ -193,6 +195,7 @@
 									</div>
 								</a>
 							</li>
+							<!--
 							<li class="full-width">
 								<a href="#!" class="full-width">
 									<div class="navLateral-body-cl">
@@ -203,6 +206,7 @@
 									</div>
 								</a>
 							</li>
+							-->
 						</ul>
 					</li>
 					<?php } ?>

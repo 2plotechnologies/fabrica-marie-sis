@@ -11,22 +11,33 @@
     if(isset($_POST['accion'])){
         $accion = $_POST['accion'];
 
-        if($accion == 'crear'){
-            $nombre = $_POST['nombre'];
-            $descripcion = $_POST['descripcion'];
+        if ($accion == 'crear') {
+            // Sanitizar entradas
+            $nombre = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING);
+            $descripcion = filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_STRING);
 
-             // Verificar si la presentación ya existe
-             $stmt = $pdo->prepare("SELECT Id FROM presentaciones WHERE Presentacion = ?");
-             $stmt->execute([$nombre]);
-             if ($stmt->fetch()) {
-                 echo "<script>
-                         alert('Ya existe una presentación con ese Nombre!');
-                         window.location.href = '../categories.php';
-                     </script>";
-                 exit;
-             }
+            // Validaciones
+            $errores = [];
+            if (empty($nombre)) $errores[] = "El nombre es obligatorio.";
+            if (empty($descripcion)) $errores[] = "La descripción es obligatoria.";
 
-            // Insertar usuario en la base de datos
+            if (!empty($errores)) {
+                echo "<script>alert('Error al crear presentación:\\n" . implode("\\n", $errores) . "'); window.location.href = '../categories.php';</script>";
+                exit;
+            }
+
+            // Verificar si la presentación ya existe
+            $stmt = $pdo->prepare("SELECT Id FROM presentaciones WHERE Presentacion = ?");
+            $stmt->execute([$nombre]);
+            if ($stmt->fetch()) {
+                echo "<script>
+                        alert('Ya existe una presentación con ese Nombre!');
+                        window.location.href = '../categories.php';
+                    </script>";
+                exit;
+            }
+
+            // Insertar en la base de datos
             $stmt = $pdo->prepare("INSERT INTO presentaciones (Presentacion, Descripcion) VALUES (?, ?)");
             if ($stmt->execute([$nombre, $descripcion])) {
                 echo "<script>
@@ -35,7 +46,7 @@
                     </script>";
                 exit;
             } else {
-                echo "Error en la creación.";
+                echo "<script>alert('Error en la creación.'); window.location.href = '../categories.php';</script>";
             }
         } else if($accion == 'asignar'){
             $id_producto = $_POST["id_producto"] ?? "";

@@ -1,11 +1,18 @@
 <?php
+session_start();
 require '../conexion.php';
+
+if (!isset($_SESSION['id_Usuario'])) {
+    echo "ERROR: Usuario no identificado";
+    die();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
     $id = $_POST['id'] ?? '';
 
-    if ($accion === 'marcar_pagado' && $id) {
+    // Validar que el ID no esté vacío y sea numérico
+    if ($accion === 'marcar_pagado' && !empty($id) && is_numeric($id)) {
         try {
             $stmt = $pdo->prepare("UPDATE cobranzas SET pagado = 1 WHERE Id = :id");
             $stmt->execute([':id' => $id]);
@@ -14,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['mensaje' => 'Error: ' . $e->getMessage()]);
         }
     } else {
-        echo json_encode(['mensaje' => 'Acción inválida o ID faltante.']);
+        echo json_encode(['mensaje' => 'Acción inválida o ID faltante o no válido.']);
     }
 }
 ?>

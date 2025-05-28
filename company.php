@@ -115,9 +115,15 @@ if (!isset($_SESSION['id_Usuario'])) {
 															<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" onclick="editarDistrito(<?php echo $row['Id']; ?>)">
 																<i class="zmdi zmdi-edit"></i>
 															</button>
+															<?php if($row['Estado'] == 1){?>
 															<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" onclick="desactivarDistrito(<?php echo $row['Id']; ?>)">
 																<i class="zmdi zmdi-close"></i>
 															</button>
+															<?php }else{?>
+															<button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect" onclick="activarDistrito(<?php echo $row['Id']; ?>)">
+																<i class="zmdi zmdi-check"></i>
+															</button>
+															<?php } ?>
 														</td>
 													</tr>
 												<?php } ?>
@@ -201,6 +207,24 @@ if (!isset($_SESSION['id_Usuario'])) {
 					"Content-Type": "application/x-www-form-urlencoded",
 				},
 				body: `accion=desactivar&id=${id}`
+			})
+			.then(response => response.json())
+			.then(data => {
+				alert(data.mensaje);
+				window.location.reload();
+			})
+			.catch(error => console.error("Error:", error));
+		}
+	}
+
+	function activarDistrito(id) {
+		if (confirm("¿Estás seguro de que deseas activar este distrito o región?")) {
+			fetch("backend/distritos_regiones.php", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+				},
+				body: `accion=activar&id=${id}`
 			})
 			.then(response => response.json())
 			.then(data => {

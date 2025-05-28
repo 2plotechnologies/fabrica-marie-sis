@@ -16,6 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // $id = $_POST["id"] ?? "";
  
          $id = $_POST["id"] ?? "";
+
+         if (empty($id) || !is_numeric($id)) {
+            die("<script>alert('Error: Datos no validos'); window.history.back();</script>");
+        }
  
          try {
              $sql = "UPDATE usuarios SET Estado = '0' WHERE Id = :id";
@@ -30,6 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // $id = $_POST["id"] ?? "";
  
          $id = $_POST["id"] ?? "";
+
+         if (empty($id) || !is_numeric($id)) {
+            die("<script>alert('Error: Datos no validos'); window.history.back();</script>");
+        }
  
          try {
              $sql = "UPDATE usuarios SET Estado = '1' WHERE Id = :id";
@@ -51,6 +59,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (!$id || !$dni || !$nombre || !$correo || !$telefono) {
             die("<script>alert('Error: Datos obligatorios incompletos'); window.history.back();</script>");
+        }
+
+        // Verificar si el usuario ya existe
+        $stmt = $pdo->prepare("SELECT Id FROM usuarios WHERE DNI = :dni AND Id != :id");
+        $stmt->execute([
+            ":dni" => $dni,
+            ":id" => $id
+        ]);
+        if ($stmt->fetch()) {
+            echo json_encode(["mensaje" => "Ya existe un usuario con ese Nro. de documento!"]);
+            exit;
         }
 
         try {

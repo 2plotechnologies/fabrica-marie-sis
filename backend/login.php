@@ -3,8 +3,8 @@ session_start();
 require 'conexion.php'; // Importar la conexión
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $dni = $_POST["dni"];
-    $password = $_POST["password"];
+    $dni = filter_input(INPUT_POST, 'dni', FILTER_SANITIZE_STRING);
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
     // Buscar usuario en la base de datos
     $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE DNI = ? AND Estado = 1");

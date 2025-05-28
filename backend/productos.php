@@ -12,34 +12,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Obtener datos del formulario
     $accion = $_POST["accion"];
     
-    if($accion == 'crear'){
-        $nombre = $_POST["nombre"] ?? "";
-        $stock = $_POST["produccion"] ?? 0;
-        $precio = $_POST["precio_unitario"] ?? 0;
-        $descuento = $_POST["descuento"] ?? 0;
-        $id_presentacion = $_POST["id_presentacion"] ?? null;
-        $fecha = $_POST["fecha_creacion"] ?? date();
-        $estado = $_POST["estado"] ?? 1; // 1 = Activo, 0 = Inactivo
+    if ($accion == 'crear') {
+        // Sanitización de entradas
+        $nombre = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING);
+        $stock = filter_input(INPUT_POST, 'produccion', FILTER_VALIDATE_INT);
+        $precio = filter_input(INPUT_POST, 'precio_unitario', FILTER_VALIDATE_FLOAT);
+        $descuento = filter_input(INPUT_POST, 'descuento', FILTER_VALIDATE_FLOAT);
+        $id_presentacion = filter_input(INPUT_POST, 'id_presentacion', FILTER_VALIDATE_INT);
+        $fecha = filter_input(INPUT_POST, 'fecha_creacion', FILTER_SANITIZE_STRING);
+        $estado = filter_input(INPUT_POST, 'estado', FILTER_VALIDATE_INT);
 
-        $carpeta_destino = "../assets/productos/"; // Carpeta donde se guardará la imagen
+        $errores = [];
 
+        // Validaciones básicas
+        if (!$nombre) $errores[] = "El nombre del producto es obligatorio.";
+        if ($stock === false || $stock < 0) $errores[] = "Stock inválido.";
+        if ($precio === false || $precio < 0) $errores[] = "Precio inválido.";
+        if ($descuento === false || $descuento < 0) $errores[] = "Descuento inválido.";
+        if (!$id_presentacion) $errores[] = "Presentación inválida.";
+        if (!$estado) $estado = 1; // Valor por defecto si no se proporciona
+        if (!$fecha) $fecha = date('Y-m-d');
+
+        // Validar imagen
+        $carpeta_destino = "../assets/productos/";
+        $imagen_ruta = "";
         if (isset($_FILES["imagen"]) && $_FILES["imagen"]["error"] == 0) {
-            $nombre_imagen = time() . "_" . basename($_FILES["imagen"]["name"]); // Evita nombres repetidos
-            $ruta_final = $carpeta_destino . $nombre_imagen;
-
-            if (move_uploaded_file($_FILES["imagen"]["tmp_name"], $ruta_final)) {
-                $imagen_ruta = "assets/productos/" . $nombre_imagen; // Ruta relativa para la base de datos
+            $tipo_archivo = mime_content_type($_FILES["imagen"]["tmp_name"]);
+            $permitidos = ['image/jpeg', 'image/png', 'image/webp'];
+            if (!in_array($tipo_archivo, $permitidos)) {
+                $errores[] = "El tipo de imagen no es válido. Solo se permiten JPG, PNG y WEBP.";
             } else {
-                die("Error al mover la imagen a la carpeta destino.");
+                $nombre_imagen = time() . "_" . basename($_FILES["imagen"]["name"]);
+                $ruta_final = $carpeta_destino . $nombre_imagen;
+
+                if (!move_uploaded_file($_FILES["imagen"]["tmp_name"], $ruta_final)) {
+                    $errores[] = "Error al mover la imagen a la carpeta destino.";
+                } else {
+                    $imagen_ruta = "assets/productos/" . $nombre_imagen;
+                }
             }
         } else {
-            die("Error en la subida de la imagen.");
+            $errores[] = "Debe subir una imagen válida.";
         }
 
+        // Mostrar errores si existen
+        if (!empty($errores)) {
+            echo "<script>alert('Errores al registrar el producto:\\n" . implode("\\n", $errores) . "'); window.history.back();</script>";
+            exit;
+        }
 
-        // Insertar datos en la base de datos
         try {
-            // Verificar si el producto ya existe
+            // Verificar duplicado
             $stmt = $pdo->prepare("SELECT Id FROM productos WHERE Nombre = ?");
             $stmt->execute([$nombre]);
             if ($stmt->fetch()) {
@@ -51,34 +74,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             // Insertar producto
-            $sql = "INSERT INTO productos (Nombre, Fecha_Creacion, Estado, Imagen) 
-                    VALUES (:nombre, :fecha, :estado, :imagen)";
-            $stmt = $pdo->prepare($sql);
+            $stmt = $pdo->prepare("INSERT INTO productos (Nombre, Fecha_Creacion, Estado, Imagen) 
+                                VALUES (:nombre, :fecha, :estado, :imagen)");
             $stmt->execute([
                 ":nombre" => $nombre,
                 ":fecha" => $fecha,
                 ":estado" => $estado,
                 ":imagen" => $imagen_ruta
             ]);
-        
-            // Obtener el ID del producto recién insertado
+
             $producto_id = $pdo->lastInsertId();
-        
-            // Insertar en la tabla Producto_Presentacion
-            $sql_presentacion = "INSERT INTO Producto_Presentacion (Id_Producto, Id_Presentacion, Precio_Unitario, Descuento, Produccion_Actual) VALUES (:producto_id, :presentacion_id, :precio, :descuento, :produccion)";
-            $stmt_presentacion = $pdo->prepare($sql_presentacion);
-            $stmt_presentacion->execute([
+
+            // Insertar presentación del producto
+            $stmt = $pdo->prepare("INSERT INTO Producto_Presentacion 
+                                (Id_Producto, Id_Presentacion, Precio_Unitario, Descuento, Produccion_Actual) 
+                                VALUES (:producto_id, :presentacion_id, :precio, :descuento, :produccion)");
+            $stmt->execute([
                 ":producto_id" => $producto_id,
                 ":presentacion_id" => $id_presentacion,
                 ":precio" => $precio,
                 ":descuento" => $descuento,
-                ":produccion" => $stock  // Debes asegurarte de que este valor viene del formulario
+                ":produccion" => $stock
             ]);
-        
+
             echo "<script>alert('Producto registrado con éxito'); window.location.href = '../products.php';</script>";
         } catch (PDOException $e) {
             echo "<script>alert('Error: " . $e->getMessage() . "'); window.history.back();</script>";
-        }    
+        }
     } else if ($accion == 'desactivar'){
        // $id = $_POST["id"] ?? "";
 
@@ -123,6 +145,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_POST["productoId"] ?? "";
         $nombre = $_POST["nombre"] ?? "";
         $produccion = $_POST["produccion"] ?? "";
+
+         // Verificar si el producto ya existe
+        $stmt = $pdo->prepare("SELECT Id FROM productos WHERE Nombre = :nombre AND Id != :id");
+        $stmt->execute([
+            ":nombre" => $nombre,
+             ":id" => $id
+        ]);
+        if ($stmt->fetch()) {
+            echo json_encode(["mensaje" => "Ya existe un producto con ese Nombre!"]);
+            exit;
+        }
 
         try {
             $sql = "UPDATE productos SET Nombre = :nombre

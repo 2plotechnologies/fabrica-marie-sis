@@ -11,11 +11,23 @@
     if(isset($_POST['accion'])){
         $accion = $_POST['accion'];
 
-        if($accion == 'crear'){
-            $nombre = $_POST['nombre'];
-            $estado = $_POST['estado'];
-            // Insertar usuario en la base de datos
-            $stmt = $pdo->prepare("INSERT INTO distritos_regiones(Region_Distrito, Estado) VALUES (?, ?)");
+       if ($accion == 'crear') {
+            // Sanitizar entradas
+            $nombre = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING);
+            $estado = filter_input(INPUT_POST, 'estado', FILTER_SANITIZE_NUMBER_INT);
+
+            // Validaciones
+            $errores = [];
+            if (empty($nombre)) $errores[] = "El nombre es obligatorio.";
+            if (!in_array($estado, [0, 1])) $errores[] = "Estado inválido.";
+
+            if (!empty($errores)) {
+                echo "<script>alert('Error al crear registro:\\n" . implode("\\n", $errores) . "'); window.location.href = '../company.php';</script>";
+                exit;
+            }
+
+            // Insertar en la base de datos
+            $stmt = $pdo->prepare("INSERT INTO distritos_regiones (Region_Distrito, Estado) VALUES (?, ?)");
             if ($stmt->execute([$nombre, $estado])) {
                 echo "<script>
                         alert('Registro creado exitosamente.');
@@ -23,9 +35,10 @@
                     </script>";
                 exit;
             } else {
-                echo "Error en la creación.";
+                echo "<script>alert('Error en la creación.'); window.location.href = '../company.php';</script>";
             }
         }
+
 
          if ($accion === 'editar') {
             $id = $_POST['id'];
@@ -42,6 +55,13 @@
             $stmt = $pdo->prepare("UPDATE distritos_regiones SET Estado = 0 WHERE Id = ?");
             $stmt->execute([$id]);
             echo json_encode(["mensaje" => "Registro desactivado correctamente."]);
+        }
+
+         if ($accion === 'activar') {
+            $id = $_POST['id'];
+            $stmt = $pdo->prepare("UPDATE distritos_regiones SET Estado = 1 WHERE Id = ?");
+            $stmt->execute([$id]);
+            echo json_encode(["mensaje" => "Registro activado correctamente."]);
         }
         exit;
 
