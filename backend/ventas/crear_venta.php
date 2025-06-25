@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST['vendedor'])){
         $id_vendedor = filter_input(INPUT_POST, "vendedor", FILTER_VALIDATE_INT);
     }else{
-        $id_vendedor = $_SESSION["Id_Usuario"];
+        $id_vendedor = $_SESSION["id_Usuario"];
     }
     $tipo_pago = filter_input(INPUT_POST, "tipo_pago", FILTER_VALIDATE_INT);
     $region = filter_input(INPUT_POST, "region", FILTER_VALIDATE_INT);

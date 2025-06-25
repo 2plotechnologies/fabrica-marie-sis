@@ -109,6 +109,9 @@ if (!isset($_SESSION['id_Usuario'])) {
                                         </div>
                                     </div>
                                     <?php } ?>
+                                    <?php if($_SESSION["rol"] == 2){ ?>
+                                        <input type="hidden" id="vendedor" value = "<?php echo $_SESSION["id_Usuario"]; ?>">
+                                    <?php } ?>
                                     <div class="mdl-cell mdl-cell--6-col">
                                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                             <select class="mdl-textfield__input" id="tipo_pago">
