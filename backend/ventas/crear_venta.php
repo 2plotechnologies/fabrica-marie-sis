@@ -22,6 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $region = filter_input(INPUT_POST, "region", FILTER_VALIDATE_INT);
     $metodo_pago = filter_input(INPUT_POST, "metodo", FILTER_VALIDATE_INT);
     $total = filter_input(INPUT_POST, "total", FILTER_SANITIZE_STRING);
+    // Obtener la fecha actual (solo fecha)
+    $fecha_registro = date('Y-m-d');
 
     // Verificar si los datos requeridos están presentes
     if (!$fecha || !$id_cliente || !$id_vendedor || !$tipo_pago || !$region || !$metodo_pago || !$total) {
@@ -29,8 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Insertar venta en la base de datos
-    $stmt = $pdo->prepare("INSERT INTO ventas (Id_Vendedor, Id_Cliente, Fecha, Tipo_Pago, Metodo_Pago, Region_Distrito, Total) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    if ($stmt->execute([$id_vendedor, $id_cliente, $fecha, $tipo_pago, $metodo_pago, $region, $total])) {
+    $stmt = $pdo->prepare("INSERT INTO ventas (Id_Vendedor, Id_Cliente, Fecha, Tipo_Pago, Metodo_Pago, Region_Distrito, Total, Fecha_Registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt->execute([$id_vendedor, $id_cliente, $fecha, $tipo_pago, $metodo_pago, $region, $total, $fecha_registro])) {
         $id_venta = $pdo->lastInsertId(); // Obtener el ID de la venta recién creada
 
         // Decodificar los productos enviados desde JavaScript

@@ -138,7 +138,8 @@ if (!isset($_SESSION['id_Usuario'])) {
                                         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp full-width">
                                             <thead>
                                                 <tr>
-                                                    <th>Fecha</th>
+                                                    <th>Fecha de Venta</th>
+                                                    <th>Fecha de Registro</th>
                                                     <th>Vendedor</th>
                                                     <th class="mdl-data-table__cell--non-numeric">Producto/Promoción</th>
                                                     <th>Presentación</th>
@@ -210,6 +211,7 @@ if (!isset($_SESSION['id_Usuario'])) {
                 tabla.append(`
                     <tr>
                         <td>${v.Fecha}</td>
+                        <td>${v.Fecha_Registro}</td>
                         <td>${v.Vendedor}</td>
                         <td class="mdl-data-table__cell--non-numeric">${v.Producto}</td>
                         <td>${v.Presentacion}</td>

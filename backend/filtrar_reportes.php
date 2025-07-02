@@ -48,6 +48,7 @@ if (!empty($metodo)) {
 // Consulta principal
 $sql = "SELECT 
             v.Fecha,
+            v.Fecha_Registro,
             u.Nombre AS Vendedor,
             d.Producto_Promocion AS Producto,
             d.Presentacion,

@@ -48,6 +48,7 @@ if (!empty($metodo)) {
 // Consultar ventas
 $sql = "SELECT 
             v.Fecha,
+            v.Fecha_Registro,
             u.Nombre AS Vendedor,
             d.Producto_Promocion AS Producto,
             d.Presentacion,
@@ -75,7 +76,8 @@ $pdf->Ln(5);
 $html = '<table border="1" cellpadding="4">
     <thead>
         <tr style="background-color:#f2f2f2;">
-            <th><b>Fecha</b></th>
+            <th><b>Fecha de Venta</b></th>
+            <th><b>Fecha de Registro</b></th>
             <th><b>Vendedor</b></th>
             <th><b>Producto/Promoción</b></th>
             <th><b>Presentación</b></th>
@@ -95,6 +97,7 @@ $total_ventas = 0;
 foreach ($resultados as $row) {
     $html .= '<tr>
         <td>' . $row['Fecha'] . '</td>
+        <td>' . $row['Fecha_Registro'] . '</td>
         <td>' . $row['Vendedor'] . '</td>
         <td>' . $row['Producto'] . '</td>
         <td>' . $row['Presentacion'] . '</td>

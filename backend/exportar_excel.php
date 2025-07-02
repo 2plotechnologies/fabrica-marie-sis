@@ -51,6 +51,7 @@ if (!empty($metodo)) {
 // Consulta
 $sql = "SELECT 
             v.Fecha,
+            v.Fecha_Registro,
             u.Nombre AS Vendedor,
             d.Producto_Promocion AS Producto,
             d.Presentacion,
@@ -73,7 +74,7 @@ $sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle("Reporte de Ventas");
 
 // Encabezados
-$encabezados = ['Fecha', 'Vendedor', 'Producto/Promoción', 'Presentación', 'Cantidad', 'Valor Unitario', 'Tipo', 'Total'];
+$encabezados = ['Fecha de Venta', 'Fecha de Registro', 'Vendedor', 'Producto/Promoción', 'Presentación', 'Cantidad', 'Valor Unitario', 'Tipo', 'Total'];
 $col = 'A';
 foreach ($encabezados as $titulo) {
     $sheet->setCellValue($col . '1', $titulo);
@@ -88,13 +89,14 @@ $total_ventas = 0;
 
 foreach ($resultados as $row) {
     $sheet->setCellValue("A$fila", $row['Fecha']);
-    $sheet->setCellValue("B$fila", $row['Vendedor']);
-    $sheet->setCellValue("C$fila", $row['Producto']);
-    $sheet->setCellValue("D$fila", $row['Presentacion']);
-    $sheet->setCellValue("E$fila", $row['Cantidad']);
-    $sheet->setCellValue("F$fila", $row['Precio_Unitario']);
-    $sheet->setCellValue("G$fila", $row['Tipo']);
-    $sheet->setCellValue("H$fila", $row['Total']);
+    $sheet->setCellValue("B$fila", $row['Fecha_Registro']);
+    $sheet->setCellValue("C$fila", $row['Vendedor']);
+    $sheet->setCellValue("D$fila", $row['Producto']);
+    $sheet->setCellValue("E$fila", $row['Presentacion']);
+    $sheet->setCellValue("F$fila", $row['Cantidad']);
+    $sheet->setCellValue("G$fila", $row['Precio_Unitario']);
+    $sheet->setCellValue("H$fila", $row['Tipo']);
+    $sheet->setCellValue("I$fila", $row['Total']);
 
     if ($row['Tipo'] == 'Producto') {
         $total_productos += $row['Cantidad'];
