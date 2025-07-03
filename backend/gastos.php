@@ -53,6 +53,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             echo "Error en el registro.";
         }
+    }else if($accion == 'eliminar'){
+        $id = $_POST["id"] ?? "";
+
+         if (empty($id) || !is_numeric($id)) {
+            die("<script>alert('Error: Datos no validos'); window.history.back();</script>");
+        }
+ 
+         try {
+             $sql = "DELETE FROM gastos WHERE Id = :id";
+             $stmt = $pdo->prepare($sql);
+             $stmt->execute([":id" => $id]);
+ 
+             echo json_encode(["mensaje" => "Gasto eliminado con éxito"]);
+         } catch (PDOException $e) {
+             echo json_encode(["mensaje" => "Error: " . $e->getMessage()]);
+         }
     }
 }
 ?>

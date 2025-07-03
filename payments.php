@@ -28,6 +28,15 @@ if (!isset($_SESSION['id_Usuario'])) {
 		 .hidden {
             display: none;
         }
+
+		.opciones-flotantes {
+			position: absolute;
+			background: white;
+			box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+			padding: 10px;
+			border-radius: 5px;
+			display: none;
+		}
 	</style>
 </head>
 <body>
@@ -192,10 +201,15 @@ if (!isset($_SESSION['id_Usuario'])) {
 											<span><?php echo $row['Descripcion'] ?></span>
 											<span class="mdl-list__item-sub-title">S/ <?php echo $row['Monto'] ?></span>
 										</span>
-										<a class="mdl-list__item-secondary-action" href="#!"><i class="zmdi zmdi-more"></i></a>
+										<button class="mdl-list__item-secondary-action" onclick="mostrarOpciones(this, <?php echo htmlspecialchars($row['Id']);?>)">
+											<i class="zmdi zmdi-more"></i>
+										</button>
+										<div id="opciones-flotantes<?php echo htmlspecialchars($row['Id']);?>" class = "hidden">
+												<button class="boton boton-rojo" onclick="eliminarGasto(<?php echo htmlspecialchars($row['Id']);?>)">Eliminar Gasto</button>
+										</div>
 									</div>
-									<li class="full-width divider-menu-h"></li>
 									<?php } ?>
+									<li class="full-width divider-menu-h"></li>
 								</div>
 							</div>
 						</div>
@@ -209,6 +223,39 @@ if (!isset($_SESSION['id_Usuario'])) {
             let documentInput = document.getElementById("documentInput");
             documentInput.classList.toggle("hidden", !this.checked);
         });
+
+		function mostrarOpciones(boton, gastoId) {
+				let menu = document.getElementById("opciones-flotantes" + gastoId);
+
+				// Pasar el ID del Cliente a las funciones
+				menu.dataset.gastoId = gastoId;
+				
+				// Mostrar el menú flotante
+				menu.classList.remove("hidden");
+			}
+
+			// Función para desactivar Cliente
+			function eliminarGasto(id) {
+				let gastoId = document.getElementById("opciones-flotantes" + id).dataset.gastoId;
+				let confirmar = confirm("¿Seguro que deseas eliminar el gasto ID " + gastoId + "?");
+				
+				if (confirmar) {
+					fetch("backend/gastos.php", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+						body: `id=${gastoId}&accion=eliminar`
+					})
+					.then(response => response.json()) // Convertir la respuesta en JSON
+					.then(data => {
+						alert(data.mensaje); // Mostrar el mensaje recibido
+						//document.getElementById("opciones-flotantes").classList.add("hidden");
+						window.location.reload();
+					})
+					.catch(error => console.error("Error:", error));
+				}
+			}
     </script>
 </body>
 </html>
