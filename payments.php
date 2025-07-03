@@ -66,7 +66,7 @@ if (!isset($_SESSION['id_Usuario'])) {
 									<input type = "hidden" name = "accion" value = "crear">
 									<div class="mdl-grid">
 										<div class="mdl-cell mdl-cell--12-col">
-									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos gasto</legend><br>
+									        <legend class="text-condensedLight"><i class="zmdi zmdi-border-color"></i> &nbsp; Datos Gasto</legend><br>
 									    </div>
 										<div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -81,6 +81,11 @@ if (!isset($_SESSION['id_Usuario'])) {
 												<span class="mdl-textfield__error">Invalid documento</span>
 											</div>
 									    </div>
+										<div class="mdl-cell mdl-cell--6-col">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input" type="date" name="fecha" value="<?php echo date('Y-m-d'); ?>">
+											</div>
+										</div>
 									    <div class="mdl-cell mdl-cell--12-col">
 											<div class="mdl-textfield mdl-js-textfield">
 											<select id="proveedor" name="id_proveedor" class="mdl-textfield__input">
@@ -107,6 +112,30 @@ if (!isset($_SESSION['id_Usuario'])) {
 												<span class="mdl-textfield__error">Invalid description</span>
 											</div>
 									    </div>
+										<?php if($_SESSION["rol"] == 1){ ?>
+                                        <div class="mdl-cell mdl-cell--6-col">
+                                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                            <select class="mdl-textfield__input" id="usuario" name="usuario">
+                                                <option value="">-- Seleccionar Usuario --</option>
+                                                <?php
+														require 'backend/conexion.php';
+
+														// Buscar todos los usuarios vendedores en la base de datos
+														$stmt = $pdo->prepare("SELECT * FROM usuarios WHERE Estado = 1"); // Asegúrate de que la tabla tenga estos campos
+														$stmt->execute();
+														
+														// Recorrer los resultados y agregarlos al select
+														while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+															echo "<option value='" . htmlspecialchars($row['Id']) . "'>" . htmlspecialchars($row['Nombre']) . "</option>";
+														}
+													?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <?php } ?>
+                                    <?php if($_SESSION["rol"] == 2){ ?>
+                                        <input type="hidden" id="usuario" name="usuario" value = "<?php echo $_SESSION["id_Usuario"]; ?>">
+                                    <?php } ?>
 										<div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
 											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 												<input class="mdl-textfield__input" type="text" pattern="-?[0-9.]*(\.[0-9]+)?" id="Mount" name="monto">

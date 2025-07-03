@@ -27,7 +27,6 @@
 							</div>
 						</a>
 					</li>
-					<?php if($_SESSION["rol"] == 1){?>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
@@ -40,6 +39,7 @@
 							<span class="zmdi zmdi-chevron-left"></span>
 						</a>
 						<ul class="full-width menu-principal sub-menu-options">
+							<?php if($_SESSION["rol"] == 1){?>
 							<li class="full-width">
 								<a href="company.php" class="full-width">
 									<div class="navLateral-body-cl">
@@ -60,6 +60,7 @@
 									</div>
 								</a>
 							</li>
+							<?php } ?>
 							<li class="full-width">
 								<a href="payments.php" class="full-width">
 									<div class="navLateral-body-cl">
@@ -70,6 +71,7 @@
 									</div>
 								</a>
 							</li>
+							<?php if($_SESSION["rol"] == 1){?>
 							<li class="full-width">
 								<a href="categories.php" class="full-width">
 									<div class="navLateral-body-cl">
@@ -90,8 +92,10 @@
 									</div>
 								</a>
 							</li>
+							<?php } ?>
 						</ul>
 					</li>
+					<?php if($_SESSION["rol"] == 1){?>
 					<li class="full-width divider-menu-h"></li>
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
@@ -173,7 +177,6 @@
 					</li>
 					-->
 					<li class="full-width divider-menu-h"></li>
-					<?php if($_SESSION["rol"] == 1){?>
 					<li class="full-width">
 						<a href="#!" class="full-width btn-subMenu">
 							<div class="navLateral-body-cl">
@@ -195,21 +198,19 @@
 									</div>
 								</a>
 							</li>
-							<!--
+
 							<li class="full-width">
-								<a href="#!" class="full-width">
+								<a href="reporte_gastos.php" class="full-width">
 									<div class="navLateral-body-cl">
 										<i class="zmdi zmdi-widgets"></i>
 									</div>
 									<div class="navLateral-body-cr">
-										OPTION
+										Reporte de Gastos
 									</div>
 								</a>
 							</li>
-							-->
 						</ul>
 					</li>
-					<?php } ?>
 				</ul>
 			</nav>
 		</div>

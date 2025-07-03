@@ -15,12 +15,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if($accion == 'crear'){
          // Filtrar y sanitizar los datos
         $documento = filter_input(INPUT_POST, "documento", FILTER_SANITIZE_STRING);
+        $fecha = filter_input(INPUT_POST, "fecha", FILTER_SANITIZE_STRING);
         $id_proveedor = filter_input(INPUT_POST, "id_proveedor", FILTER_VALIDATE_INT);
+        $id_usuario = filter_input(INPUT_POST, "usuario", FILTER_VALIDATE_INT);
         $descripcion = filter_input(INPUT_POST, "descripcion", FILTER_SANITIZE_STRING);
         $monto = filter_input(INPUT_POST, "monto", FILTER_SANITIZE_STRING);
+        // Obtener la fecha actual (solo fecha)
+        $fecha_registro = date('Y-m-d');
 
         // Verificar si los datos requeridos están presentes
-        if (!$id_proveedor || !$descripcion || !$monto) {
+        if (!$id_proveedor || !$fecha || !$id_usuario || !$descripcion || !$monto) {
             die("<script>alert('Error: Datos inválidos o incompletos'); window.history.back();</script>");
         }
 
@@ -39,8 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
 
         // Insertar proveedor en la base de datos
-        $stmt = $pdo->prepare("INSERT INTO gastos (NumeroDocumento, IdProveedor, Descripcion, Monto) VALUES (?, ?, ?, ?)");
-        if ($stmt->execute([$documento, $id_proveedor, $descripcion, $monto])) {
+        $stmt = $pdo->prepare("INSERT INTO gastos (NumeroDocumento, Fecha, IdProveedor, Descripcion, Monto, Fecha_Registro, Id_Usuario) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        if ($stmt->execute([$documento, $fecha, $id_proveedor, $descripcion, $monto, $fecha_registro, $id_usuario])) {
             echo "<script>
                     alert('Gasto registrado exitosamente.');
                     window.location.href = '../payments.php';
